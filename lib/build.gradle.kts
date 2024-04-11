@@ -32,9 +32,12 @@ tasks {
     }
 
     generateGrammarSource {
-        outputDirectory = file("$outputDirectory/ca/objectobject/hexlr/frontend")
+
+        outputDirectory = file("$outputDirectory/ca/objectobject/hexlr/parser")
         arguments.addAll(listOf(
-            "-package", "ca.objectobject.hexlr.frontend",
+            "-package", "ca.objectobject.hexlr.parser",
+            "-no-listener",
+            "-visitor",
         ))
     }
 

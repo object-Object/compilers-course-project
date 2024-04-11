@@ -4,4 +4,4 @@ options {
     tokenVocab=HexlrLexer;
 }
 
-tmp: TMP;
+start: TMP;
