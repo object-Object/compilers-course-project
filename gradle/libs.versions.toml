@@ -1,0 +1,14 @@
+[versions]
+java = "18"
+kotlin = "1.9.20"
+antlr = "4.13.1"
+junit = "5.10.2"
+
+[libraries]
+antlr = { module="org.antlr:antlr4", version.ref="antlr" }
+kotlin-test = { module="org.jetbrains.kotlin:kotlin-test-junit5" }
+junit-engine = { module="org.junit.jupiter:junit-jupiter-engine", version.ref="junit" }
+junit-launcher = { module="org.junit.platform:junit-platform-launcher" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
