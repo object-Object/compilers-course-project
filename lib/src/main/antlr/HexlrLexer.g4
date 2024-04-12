@@ -2,7 +2,8 @@ lexer grammar HexlrLexer;
 
 // directive keywords
 
-DEFINE: '#define' -> pushMode(Define);
+DEFINE     : '#define' -> pushMode(Define);
+END_DEFINE : '#enddefine';
 
 // patterns/symbols
 

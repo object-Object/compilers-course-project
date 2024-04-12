@@ -289,17 +289,35 @@ class HexlrTest {
             """
                 Numerical Reflection: 1
                 {
-                    Additive Distillation                
+                    Division Distillation                
                 }
                 Numerical Reflection: 2
-                Numerical Reflection: 3
+                Numerical Reflection: 4
                 Numerical Reflection: 2
                 Flock's Gambit
                 Thoth's Gambit
             """ to listOf(
-                ListIota(listOf(3, 4).map(::NumberIota)),
+                ListIota(listOf(1.0/2, 1.0/4).map(::NumberIota)),
                 NumberIota(1),
             ),
+            """
+                #define My Custom Pattern
+                {
+                    True Reflection
+                }
+                #enddefine
+                My Custom Pattern
+            """ to listOf(BooleanIota(true)),
+            """
+                #define My Custom Pattern
+                {
+                    True Reflection
+                }
+                #enddefine
+                {
+                    My Custom Pattern
+                }
+            """ to listOf(ListIota(OpTrue.toIota())),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

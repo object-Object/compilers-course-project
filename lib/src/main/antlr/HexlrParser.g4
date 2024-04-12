@@ -25,7 +25,7 @@ pattern:
 directive: defineDirective;
 
 defineDirective:
-    DEFINE name=PATTERN (EQUALS signature)? EOL+ block;
+    DEFINE name=PATTERN (EQUALS signature)? EOL+ block EOL+ END_DEFINE;
 
 block: INTROSPECTION (EOL+ statements)? EOL+ RETROSPECTION;
 

@@ -8,10 +8,14 @@ import ca.objectobject.hexlr.eval.patterns.OpMask
 import ca.objectobject.hexlr.parser.HexlrParser.*
 
 class HexlrVisitor : HexlrParserBaseVisitor<List<Iota>>() {
+    private val macros = mutableMapOf<String, List<Iota>>()
+
     override fun aggregateResult(aggregate: List<Iota>?, nextResult: List<Iota>?) =
         listOfNotNull(aggregate, nextResult).flatten()
 
-    override fun visitNamedPattern(ctx: NamedPatternContext) = listOf(PatternRegistry.get(ctx.name.text).toIota())
+    override fun visitNamedPattern(ctx: NamedPatternContext) = ctx.name.text.let {name ->
+        macros[name] ?: listOf(PatternRegistry.get(name).toIota())
+    }
 
     override fun visitNamedPatternWithArg(ctx: NamedPatternWithArgContext) =
         listOf(PatternRegistry.get(ctx.name.text, ctx.arg.text).toIota())
@@ -21,4 +25,9 @@ class HexlrVisitor : HexlrParserBaseVisitor<List<Iota>>() {
     override fun visitNumberPattern(ctx: NumberPatternContext) = listOf(OpNumber(ctx.NUMBER().text).toIota())
 
     override fun visitMaskPattern(ctx: MaskPatternContext) = listOf(OpMask(ctx.MASK().text).toIota())
+
+    override fun visitDefineDirective(ctx: DefineDirectiveContext): List<Iota> {
+        macros[ctx.name.text] = visitChildren(ctx.block().statements())
+        return listOf()
+    }
 }
