@@ -14,12 +14,12 @@ abstract class ArithmeticPattern :
     override fun eval(runtime: Runtime, input0: ArithmeticIota, input1: ArithmeticIota) = listOf(
         when (input0) {
             is NumberIota -> when (input1) {
-                is NumberIota -> operate(input0.number, input1.number)
-                is VectorIota -> operate(input0.number, input1)
+                is NumberIota -> operate(input0.value, input1.value)
+                is VectorIota -> operate(input0.value, input1)
             }
 
             is VectorIota -> when (input1) {
-                is NumberIota -> operate(input0, input1.number)
+                is NumberIota -> operate(input0, input1.value)
                 is VectorIota -> operate(input0, input1)
             }
         }

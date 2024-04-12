@@ -10,5 +10,5 @@ data object OpCreateVec :
     override val outputTypes = listOf(VectorIota::class)
 
     override fun eval(runtime: Runtime, input0: NumberIota, input1: NumberIota, input2: NumberIota) =
-        listOf(VectorIota(input0.number, input1.number, input2.number))
+        listOf(VectorIota(input0.value, input1.value, input2.value))
 }

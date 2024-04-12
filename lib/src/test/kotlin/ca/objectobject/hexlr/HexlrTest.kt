@@ -3,6 +3,7 @@
  */
 package ca.objectobject.hexlr
 
+import ca.objectobject.hexlr.eval.iotas.BooleanIota
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.eval.iotas.NumberIota
 import ca.objectobject.hexlr.eval.iotas.VectorIota
@@ -21,45 +22,59 @@ class HexlrTest {
 
     companion object {
         @JvmStatic
-        fun getData() = listOf<Pair<String, List<Iota>>>(
+        fun getData() = listOf(
             "" to listOf(),
-            "Numerical Reflection: 0" to listOf(NumberIota(0.0)),
-            "Numerical Reflection: 1" to listOf(NumberIota(1.0)),
+            "Numerical Reflection: 0" to listOf(NumberIota(0)),
+            "Numerical Reflection: 1" to listOf(NumberIota(1)),
             "Numerical Reflection: -2.5" to listOf(NumberIota(-2.5)),
-            "Numerical Reflection: 1e2" to listOf(NumberIota(100.0)),
+            "Numerical Reflection: 1e2" to listOf(NumberIota(100)),
             """
                 Numerical Reflection: 0
                 Numerical Reflection: 1
             """ to listOf(
-                NumberIota(1.0),
-                NumberIota(0.0),
+                NumberIota(1),
+                NumberIota(0),
             ),
-            """
-                Numerical Reflection: 0
-                Numerical Reflection: 1
-                Numerical Reflection: 2
-                Vector Exaltation
-            """ to listOf(VectorIota(0.0, 1.0, 2.0)),
             """
                 Numerical Reflection: 1
                 Numerical Reflection: 2
                 Additive Distillation
-            """ to listOf(NumberIota(3.0)),
+            """ to listOf(NumberIota(3)),
             """
                 Numerical Reflection: 1
                 Numerical Reflection: 2
                 Subtractive Distillation
-            """ to listOf(NumberIota(-1.0)),
+            """ to listOf(NumberIota(-1)),
             """
                 Numerical Reflection: 2
                 Numerical Reflection: 3
                 Multiplicative Distillation
-            """ to listOf(NumberIota(6.0)),
+            """ to listOf(NumberIota(6)),
             """
                 Numerical Reflection: 1
                 Numerical Reflection: 2
                 Division Distillation
             """ to listOf(NumberIota(0.5)),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Vector Exaltation
+            """ to listOf(VectorIota(0, 1, 2)),
+            "True Reflection" to listOf(BooleanIota(true)),
+            "False Reflection" to listOf(BooleanIota(false)),
+            """
+                True Reflection
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Augur's Exaltation
+            """ to listOf(NumberIota(1)),
+            """
+                False Reflection
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Augur's Exaltation
+            """ to listOf(NumberIota(2)),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

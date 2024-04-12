@@ -12,6 +12,11 @@ object PatternRegistry {
         "Division Distillation" to OpDivide,
 
         "Vector Exaltation" to OpCreateVec,
+
+        "True Reflection" to OpTrue,
+        "False Reflection" to OpFalse,
+
+        "Augur's Exaltation" to OpIf,
     )
 
     private val PATTERNS_WITH_ARG: Map<String, Map<String, Action>> = mapOf(
