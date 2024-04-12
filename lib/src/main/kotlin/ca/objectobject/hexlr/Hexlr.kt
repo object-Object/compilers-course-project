@@ -30,8 +30,9 @@ fun main() {
     val source = """
         Numerical Reflection: 1
         Numerical Reflection: 2
-        Additive Distillation
-        Numerical Reflection: 6
+        Numerical Reflection: 3
+        Vector Exaltation
+        Numerical Reflection: 2
         Division Distillation
     """.trimIndent()
 

@@ -12,6 +12,7 @@ abstract class TypedPattern : Pattern {
      * Input iota types. The rightmost value is at the top of the stack.
      */
     open val inputTypes: List<KClass<out Iota>> = listOf()
+
     /**
      * Output iota types. The rightmost value is at the top of the stack.
      */
@@ -39,7 +40,7 @@ abstract class TypedPattern : Pattern {
     }
 }
 
-abstract class Pattern1<T0: Iota>(t0: KClass<T0>) : TypedPattern() {
+abstract class Pattern1<T0 : Iota>(t0: KClass<T0>) : TypedPattern() {
     override val inputTypes = listOf(t0)
 
     abstract fun eval(runtime: Runtime, input0: T0): List<Iota>
@@ -50,7 +51,7 @@ abstract class Pattern1<T0: Iota>(t0: KClass<T0>) : TypedPattern() {
     }
 }
 
-abstract class Pattern2<T0: Iota, T1: Iota>(t0: KClass<T0>, t1: KClass<T1>) : TypedPattern() {
+abstract class Pattern2<T0 : Iota, T1 : Iota>(t0: KClass<T0>, t1: KClass<T1>) : TypedPattern() {
     override val inputTypes = listOf(t0, t1)
 
     abstract fun eval(runtime: Runtime, input0: T0, input1: T1): List<Iota>
@@ -58,5 +59,17 @@ abstract class Pattern2<T0: Iota, T1: Iota>(t0: KClass<T0>, t1: KClass<T1>) : Ty
     @Suppress("UNCHECKED_CAST")
     override fun eval(runtime: Runtime, inputs: List<Iota>): List<Iota> {
         return eval(runtime, inputs[0] as T0, inputs[1] as T1)
+    }
+}
+
+abstract class Pattern3<T0 : Iota, T1 : Iota, T2 : Iota>(t0: KClass<T0>, t1: KClass<T1>, t2: KClass<T2>) :
+    TypedPattern() {
+    override val inputTypes = listOf(t0, t1, t2)
+
+    abstract fun eval(runtime: Runtime, input0: T0, input1: T1, input2: T2): List<Iota>
+
+    @Suppress("UNCHECKED_CAST")
+    override fun eval(runtime: Runtime, inputs: List<Iota>): List<Iota> {
+        return eval(runtime, inputs[0] as T0, inputs[1] as T1, inputs[2] as T2)
     }
 }

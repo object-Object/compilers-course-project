@@ -1,15 +1,17 @@
 package ca.objectobject.hexlr.eval.actions
 
 import ca.objectobject.hexlr.eval.actions.patterns.*
-import org.antlr.v4.runtime.Token
 
 object PatternRegistry {
     private val PATTERNS: Map<String, Action> = mapOf(
         *addAll(OpEscape, "Consideration", "\\"),
+
         "Additive Distillation" to OpAdd,
         "Subtractive Distillation" to OpSubtract,
         "Multiplicative Distillation" to OpMultiply,
         "Division Distillation" to OpDivide,
+
+        "Vector Exaltation" to OpCreateVec,
     )
 
     private val PATTERNS_WITH_ARG: Map<String, Map<String, Action>> = mapOf(
