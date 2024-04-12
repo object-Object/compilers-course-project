@@ -3,7 +3,7 @@ package ca.objectobject.hexlr.parser
 import ca.objectobject.hexlr.eval.PatternRegistry
 import ca.objectobject.hexlr.eval.patterns.OpEscape
 import ca.objectobject.hexlr.eval.patterns.OpNumber
-import ca.objectobject.hexlr.eval.iotas.Iota
+import ca.objectobject.hexlr.eval.iotas.*
 import ca.objectobject.hexlr.eval.patterns.OpMask
 import ca.objectobject.hexlr.parser.HexlrParser.*
 
@@ -30,4 +30,12 @@ class HexlrVisitor : HexlrParserBaseVisitor<List<Iota>>() {
         macros[ctx.name.text] = visitChildren(ctx.block().statements())
         return listOf()
     }
+
+    override fun visitBooleanIota(ctx: BooleanIotaContext) = listOf(BooleanIota(ctx.BOOLEAN().text == "true"))
+
+    override fun visitNumberIota(ctx: NumberIotaContext) = listOf(NumberIota(ctx.NUMBER().text))
+
+    override fun visitVectorIota(ctx: VectorIotaContext) = listOf(VectorIota(ctx.x.text, ctx.y.text, ctx.z.text))
+
+    override fun visitListIota(ctx: ListIotaContext) = listOf(ListIota(visitChildren(ctx)))
 }

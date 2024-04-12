@@ -7,7 +7,8 @@ END_DEFINE : '#enddefine';
 
 // patterns/symbols
 
-COLON: ':';
+COLON  : ':';
+LANGLE : '<' -> pushMode(Iota);
 
 INTROSPECTION : '{' | 'Introspection';
 RETROSPECTION : '}' | 'Retrospection';
@@ -61,6 +62,22 @@ RSQUARE : ']';
 DefineSignature_COMMENT : COMMENT -> skip;
 DefineSignature_EOL     : EOL     -> type(EOL), popMode;
 DefineSignature_WS      : WS      -> skip;
+
+mode Iota;
+
+LPAREN : '(';
+RPAREN : ')';
+
+BOOLEAN: 'true' | 'false';
+
+Iota_LSQUARE : LSQUARE -> type(LSQUARE);
+Iota_RSQUARE : RSQUARE -> type(RSQUARE);
+Iota_COMMA   : COMMA   -> type(COMMA);
+Iota_NUMBER  : NUMBER  -> type(NUMBER);
+
+RANGLE: '>' -> popMode;
+
+DefineSignature_Skip: (COMMENT | EOL | WS) -> skip;
 
 // fragments
 

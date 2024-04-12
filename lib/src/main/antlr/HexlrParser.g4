@@ -8,7 +8,9 @@ start: EOL* statements? EOL* EOF;
 
 statements: statement (EOL+ statement)*;
 
-statement: pattern | directive;
+statement: pattern | embeddedIota | directive;
+
+// patterns
 
 pattern:
     name=(
@@ -16,11 +18,21 @@ pattern:
         | CONSIDERATION
         | INTROSPECTION
         | RETROSPECTION
-    )                                   # NamedPattern
-    | CONSIDERATION COLON? pattern      # EscapedPattern
-    | NUMERICAL_REFLECTION COLON NUMBER # NumberPattern
-    | BOOKKEEPERS_GAMBIT COLON MASK     # MaskPattern
-    | name=PATTERN COLON arg=PATTERN    # NamedPatternWithArg;
+    )                                               # NamedPattern
+    | CONSIDERATION COLON? (pattern | embeddedIota) # EscapedPattern
+    | NUMERICAL_REFLECTION COLON NUMBER             # NumberPattern
+    | BOOKKEEPERS_GAMBIT COLON MASK                 # MaskPattern
+    | name=PATTERN COLON arg=PATTERN                # NamedPatternWithArg;
+
+embeddedIota: LANGLE iota RANGLE;
+
+iota:
+    BOOLEAN                                                # BooleanIota
+    | NUMBER                                               # NumberIota
+    | LPAREN x=NUMBER COMMA y=NUMBER COMMA z=NUMBER RPAREN # VectorIota
+    | LSQUARE (iota (COMMA iota)* COMMA?)? RSQUARE         # ListIota;
+
+// preprocessor directives
 
 directive: defineDirective;
 
@@ -36,6 +48,6 @@ signature:
 
 types: type (COMMA type)*;
 
-type: TYPE_NAME | list;
+type: TYPE_NAME | typeList;
 
-list: LSQUARE (type (COMMA type)*)? RSQUARE;
+typeList: LSQUARE (type (COMMA type)*)? RSQUARE;

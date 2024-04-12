@@ -318,6 +318,50 @@ class HexlrTest {
                     My Custom Pattern
                 }
             """ to listOf(ListIota(OpTrue.toIota())),
+            """
+                Consideration: <0>
+            """ to listOf(NumberIota(0)),
+            """
+                {
+                    <0>
+                }
+            """ to listOf(ListIota(NumberIota(0))),
+            """
+                Consideration: <-1.5>
+            """ to listOf(NumberIota(-1.5)),
+            """
+                Consideration: <
+                    1
+                >
+            """ to listOf(NumberIota(1)),
+            """
+                Consideration: <(0, 0.5, 1e2)>
+            """ to listOf(VectorIota(0, 0.5, 100)),
+            """
+                Consideration: <true>
+            """ to listOf(BooleanIota(true)),
+            """
+                Consideration: <false>
+            """ to listOf(BooleanIota(false)),
+            """
+                Consideration: <[]>
+            """ to listOf(ListIota()),
+            """
+                Consideration: <[
+                    0,
+                    1,
+                ]>
+            """ to listOf(ListIota(NumberIota(0), NumberIota(1))),
+            """
+                Consideration: <[0, 1, (2, 3, 4), [true]]>
+            """ to listOf(
+                ListIota(
+                    NumberIota(0),
+                    NumberIota(1),
+                    VectorIota(2, 3, 4),
+                    ListIota(BooleanIota(true)),
+                ),
+            ),
         ).map { Arguments.of(it.first, it.second) }
     }
 }
