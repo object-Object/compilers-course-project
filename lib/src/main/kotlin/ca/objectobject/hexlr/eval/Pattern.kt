@@ -28,9 +28,8 @@ abstract class TypedPattern : Pattern {
 
     override fun eval(runtime: Runtime) {
         val inputs = popInputs(runtime)
-
-        val outputs = eval.call(*inputs)
-        outputs?.forEach { runtime.stack.push(it) }
+        val outputs = eval.call(*inputs) ?: return
+        runtime.stack.addAll(outputs)
     }
 
     private fun popInputs(runtime: Runtime): Array<Any> = eval.parameters.let { params ->

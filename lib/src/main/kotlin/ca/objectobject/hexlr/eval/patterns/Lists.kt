@@ -9,13 +9,13 @@ import ca.objectobject.hexlr.util.Single
 data object OpEmptyList : ConstPattern(ListIota())
 
 data object OpSingletonList : TypedPattern() {
-    override val eval: EvalFn = OpSingletonList::eval
+    override val eval: EvalFn = ::eval
 
     fun eval(iota: Iota) = ListIota(iota).toSingle()
 }
 
 data object OpSlurpList : TypedPattern() {
-    override val eval: EvalFn = OpSlurpList::eval
+    override val eval: EvalFn = ::eval
 
     fun eval(runtime: Runtime, length: NumberIota): Single<ListIota> {
         val values = pop(runtime, length.value.toInt())
@@ -24,7 +24,7 @@ data object OpSlurpList : TypedPattern() {
 }
 
 data object OpSplatList : TypedPattern() {
-    override val eval: EvalFn = OpSplatList::eval
+    override val eval: EvalFn = ::eval
 
     fun eval(list: ListIota) = list.values
 }

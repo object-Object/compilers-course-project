@@ -248,6 +248,58 @@ class HexlrTest {
                 Numerical Reflection: 1
                 Bookkeeper's Gambit: v-
             """ to listOf(NumberIota(1)),
+            """
+                Vacant Reflection
+                Vacant Reflection
+                Thoth's Gambit
+            """ to listOf(ListIota()),
+            """
+                Vacant Reflection
+                True Reflection
+                Single's Purification
+                Thoth's Gambit
+            """ to listOf(ListIota(BooleanIota(true))),
+            """
+                Numerical Reflection: 0
+                Vacant Reflection
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Numerical Reflection: 2
+                Flock's Gambit
+                Thoth's Gambit
+            """ to listOf(
+                ListIota(listOf(0, 1, 0, 2).map(::NumberIota)),
+                NumberIota(0),
+            ),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+                Vacant Reflection
+                Numerical Reflection: 2
+                Numerical Reflection: 3
+                Numerical Reflection: 4
+                Numerical Reflection: 3
+                Flock's Gambit
+                Thoth's Gambit
+            """ to listOf(
+                ListIota(listOf(0, 1, 2, 0, 1, 3, 0, 1, 4).map(::NumberIota)),
+                NumberIota(1),
+                NumberIota(0),
+            ),
+            """
+                Numerical Reflection: 1
+                {
+                    Additive Distillation                
+                }
+                Numerical Reflection: 2
+                Numerical Reflection: 3
+                Numerical Reflection: 2
+                Flock's Gambit
+                Thoth's Gambit
+            """ to listOf(
+                ListIota(listOf(3, 4).map(::NumberIota)),
+                NumberIota(1),
+            ),
         ).map { Arguments.of(it.first, it.second) }
     }
 }
