@@ -1,7 +1,7 @@
-package ca.objectobject.hexlr.eval.actions.patterns
+package ca.objectobject.hexlr.eval.patterns
 
 import ca.objectobject.hexlr.eval.Runtime
-import ca.objectobject.hexlr.eval.actions.Pattern
+import ca.objectobject.hexlr.eval.Pattern
 import ca.objectobject.hexlr.eval.iotas.BooleanIota
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.eval.iotas.NumberIota

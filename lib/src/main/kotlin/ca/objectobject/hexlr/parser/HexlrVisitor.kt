@@ -1,8 +1,8 @@
 package ca.objectobject.hexlr.parser
 
-import ca.objectobject.hexlr.eval.actions.PatternRegistry
-import ca.objectobject.hexlr.eval.actions.patterns.OpEscape
-import ca.objectobject.hexlr.eval.actions.patterns.OpNumber
+import ca.objectobject.hexlr.eval.PatternRegistry
+import ca.objectobject.hexlr.eval.patterns.OpEscape
+import ca.objectobject.hexlr.eval.patterns.OpNumber
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.parser.HexlrParser.*
 

@@ -1,7 +1,7 @@
-package ca.objectobject.hexlr.eval.actions.patterns
+package ca.objectobject.hexlr.eval.patterns
 
 import ca.objectobject.hexlr.eval.Runtime
-import ca.objectobject.hexlr.eval.actions.Pattern
+import ca.objectobject.hexlr.eval.Pattern
 
 data object OpEscape : Pattern {
     override fun eval(runtime: Runtime) {

@@ -1,4 +1,4 @@
-package ca.objectobject.hexlr.eval.actions.patterns.arithmetic
+package ca.objectobject.hexlr.eval.patterns.arithmetic
 
 import ca.objectobject.hexlr.eval.iotas.NumberIota
 import ca.objectobject.hexlr.eval.iotas.VectorIota

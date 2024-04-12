@@ -1,14 +1,15 @@
-package ca.objectobject.hexlr.eval.actions
+package ca.objectobject.hexlr.eval
 
-import ca.objectobject.hexlr.eval.Runtime
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.eval.iotas.PatternIota
 import kotlin.reflect.KCallable
 
 typealias EvalFn = KCallable<Iterable<Iota>?>
 
-interface Pattern : Action {
+interface Pattern {
     val name get() = this::class.simpleName ?: this.toString()
+
+    fun eval(runtime: Runtime)
 
     /**
      * Pops n values from the stack, returning the lowest iota first.
@@ -19,7 +20,7 @@ interface Pattern : Action {
         return runtime.pop(n)
     }
 
-    override fun toIota() = PatternIota(this)
+    fun toIota() = PatternIota(this)
 }
 
 abstract class TypedPattern : Pattern {

@@ -1,9 +1,9 @@
 package ca.objectobject.hexlr.eval
 
 import ca.objectobject.hexlr.TypeError
-import ca.objectobject.hexlr.eval.actions.patterns.OpEscape
-import ca.objectobject.hexlr.eval.actions.patterns.OpLeftParen
-import ca.objectobject.hexlr.eval.actions.patterns.OpRightParen
+import ca.objectobject.hexlr.eval.patterns.OpEscape
+import ca.objectobject.hexlr.eval.patterns.OpLeftParen
+import ca.objectobject.hexlr.eval.patterns.OpRightParen
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.eval.iotas.ListIota
 import ca.objectobject.hexlr.eval.iotas.PatternIota

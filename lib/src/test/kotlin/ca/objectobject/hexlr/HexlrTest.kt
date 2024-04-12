@@ -3,10 +3,10 @@
  */
 package ca.objectobject.hexlr
 
-import ca.objectobject.hexlr.eval.actions.patterns.OpEscape
-import ca.objectobject.hexlr.eval.actions.patterns.OpLeftParen
-import ca.objectobject.hexlr.eval.actions.patterns.OpRightParen
-import ca.objectobject.hexlr.eval.actions.patterns.OpTrue
+import ca.objectobject.hexlr.eval.patterns.OpEscape
+import ca.objectobject.hexlr.eval.patterns.OpLeftParen
+import ca.objectobject.hexlr.eval.patterns.OpRightParen
+import ca.objectobject.hexlr.eval.patterns.OpTrue
 import ca.objectobject.hexlr.eval.iotas.*
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest

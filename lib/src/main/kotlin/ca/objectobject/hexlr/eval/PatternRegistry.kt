@@ -1,10 +1,13 @@
-package ca.objectobject.hexlr.eval.actions
+package ca.objectobject.hexlr.eval
 
-import ca.objectobject.hexlr.eval.actions.patterns.*
-import ca.objectobject.hexlr.eval.actions.patterns.arithmetic.*
+import ca.objectobject.hexlr.eval.patterns.*
+import ca.objectobject.hexlr.eval.patterns.arithmetic.OpAdd
+import ca.objectobject.hexlr.eval.patterns.arithmetic.OpDivide
+import ca.objectobject.hexlr.eval.patterns.arithmetic.OpMultiply
+import ca.objectobject.hexlr.eval.patterns.arithmetic.OpSubtract
 
 object PatternRegistry {
-    private val PATTERNS: Map<String, Action> = mapOf(
+    private val PATTERNS: Map<String, Pattern> = mapOf(
         *addAll(OpEscape, "Consideration", "\\"),
         *addAll(OpLeftParen, "Introspection", "{"),
         *addAll(OpRightParen, "Retrospection", "}"),
@@ -37,7 +40,7 @@ object PatternRegistry {
         "Hermes' Gambit" to OpEval,
     )
 
-    private val PATTERNS_WITH_ARG: Map<String, Map<String, Action>> = mapOf(
+    private val PATTERNS_WITH_ARG: Map<String, Map<String, Pattern>> = mapOf(
 
     )
 
@@ -45,5 +48,5 @@ object PatternRegistry {
 
     fun get(name: String, arg: String) = PATTERNS_WITH_ARG[name]?.get(arg) ?: TODO("$name: $arg")
 
-    private fun addAll(action: Action, vararg names: String) = names.map { it to action }.toTypedArray()
+    private fun addAll(pattern: Pattern, vararg names: String) = names.map { it to pattern }.toTypedArray()
 }

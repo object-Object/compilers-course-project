@@ -1,6 +1,6 @@
 package ca.objectobject.hexlr.eval.iotas
 
-import ca.objectobject.hexlr.eval.actions.Pattern
+import ca.objectobject.hexlr.eval.Pattern
 
 /**
  * Iotas that can be evaluated by Hermes' Gambit.

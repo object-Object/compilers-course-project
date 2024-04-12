@@ -1,7 +1,7 @@
-package ca.objectobject.hexlr.eval.actions.patterns.arithmetic
+package ca.objectobject.hexlr.eval.patterns.arithmetic
 
-import ca.objectobject.hexlr.eval.actions.EvalFn
-import ca.objectobject.hexlr.eval.actions.TypedPattern
+import ca.objectobject.hexlr.eval.EvalFn
+import ca.objectobject.hexlr.eval.TypedPattern
 import ca.objectobject.hexlr.eval.iotas.ArithmeticIota
 import ca.objectobject.hexlr.eval.iotas.NumberIota
 import ca.objectobject.hexlr.eval.iotas.VectorIota
