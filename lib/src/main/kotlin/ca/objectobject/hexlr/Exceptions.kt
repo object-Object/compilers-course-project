@@ -1,16 +1,11 @@
 package ca.objectobject.hexlr
 
-import ca.objectobject.hexlr.eval.actions.Action
+import kotlin.reflect.KClass
 
-open class HexlrException(message: String? = null, cause: Throwable? = null) : Exception(message, cause) {
+class TypeError(message: String? = null, cause: Throwable? = null) : RuntimeException(message, cause) {
     constructor(cause: Throwable) : this(null, cause)
-}
 
-open class HexlrRuntimeError(message: String? = null, cause: Throwable? = null) : HexlrException(message, cause) {
-    constructor(cause: Throwable) : this(null, cause)
-}
+    constructor(got: Any, want: String) : this("Expected $want, got ${got.javaClass.kotlin}")
 
-class TypeError(message: String? = null, cause: Throwable? = null) : HexlrRuntimeError(message, cause) {
-    constructor(cause: Throwable) : this(null, cause)
-    constructor(action: Action, want: String) : this("Expected $want, got ${action.javaClass.kotlin}")
+    constructor(got: Any, want: KClass<*>) : this("Expected ${want.simpleName}, got ${got.javaClass.kotlin}")
 }

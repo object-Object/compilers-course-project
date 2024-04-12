@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.Token
 object PatternRegistry {
     private val PATTERNS: Map<String, Action> = mapOf(
         *addAll(OpEscape, "Consideration", "\\"),
+        "Additive Distillation" to OpAdd,
     )
 
     private val PATTERNS_WITH_ARG: Map<String, Map<String, Action>> = mapOf(
@@ -16,6 +17,5 @@ object PatternRegistry {
 
     fun get(name: String, arg: String) = PATTERNS_WITH_ARG[name]?.get(arg) ?: TODO()
 
-    private fun addAll(action: Action, vararg names: String) =
-        names.map { name -> name to action }.toTypedArray()
+    private fun addAll(action: Action, vararg names: String) = names.map { it to action }.toTypedArray()
 }

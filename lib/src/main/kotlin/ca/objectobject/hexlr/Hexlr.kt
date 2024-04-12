@@ -28,9 +28,9 @@ fun execute(source: String) {
 
 fun main() {
     val source = """
-        Consideration: Consideration
-        Numerical Reflection: 0
-        Numerical Reflection: -1.5e4
+        Numerical Reflection: 1
+        Numerical Reflection: 2
+        Additive Distillation
     """.trimIndent()
 
     val actions = parseActions(source)
