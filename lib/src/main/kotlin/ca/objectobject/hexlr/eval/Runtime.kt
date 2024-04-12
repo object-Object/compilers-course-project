@@ -1,28 +1,32 @@
 package ca.objectobject.hexlr.eval
 
+import ca.objectobject.hexlr.TypeError
 import ca.objectobject.hexlr.eval.actions.Action
+import ca.objectobject.hexlr.eval.actions.Pattern
 import ca.objectobject.hexlr.eval.iotas.Iota
+import ca.objectobject.hexlr.eval.iotas.PatternIota
 import java.util.Stack
 
-sealed class EscapeMode {
-    data object NONE : EscapeMode()
-    data object SINGLE : EscapeMode()
-    data class MULTIPLE(val check: (Action) -> Boolean) : EscapeMode() {
-        constructor(closer: Action) : this({ action -> action == closer })
-    }
-}
-
-class Runtime {
-    val stack: Stack<Iota> = Stack()
-    var escapeMode: EscapeMode = EscapeMode.NONE
-
-    private val callStack: Stack<Action> = Stack()
-
+data class Runtime(
+    val stack: Stack<Iota> = Stack(),
+    var escapeSingle: Boolean = false,
+) {
     fun execute(actions: List<Action>) = actions.forEach(::execute)
 
-    fun execute(action: Action) {}
+    fun execute(action: Action) {
+        if (escapeSingle) {
+            pushEscaped(action)
+            escapeSingle = false
+            return
+        }
+        action.eval(this)
+    }
 
-    override fun toString(): String {
-        return "${super.toString()}(stack=$stack, escapeMode=$escapeMode)"
+    private fun pushEscaped(action: Action): Iota {
+        val iota = when (action) {
+            is Pattern -> PatternIota(action)
+            else -> throw TypeError(action, "escapable value")
+        }
+        return stack.push(iota)
     }
 }
