@@ -4,10 +4,19 @@ import ca.objectobject.hexlr.eval.Runtime
 import ca.objectobject.hexlr.eval.iotas.Iota
 import kotlin.reflect.KCallable
 
-typealias EvalFn = KCallable<Iterable<Iota>>
+typealias EvalFn = KCallable<Iterable<Iota>?>
 
 interface Pattern : Action {
     val name get() = this::class.simpleName ?: this.toString()
+
+    /**
+     * Pops n values from the stack, returning the lowest iota first.
+     */
+    fun pop(runtime: Runtime, n: Int = 1): List<Iota> {
+        val size = runtime.stack.count()
+        if (n > size) throw IllegalArgumentException("$name expected $n input(s) but got $size")
+        return runtime.pop(n)
+    }
 }
 
 abstract class TypedPattern : Pattern {
@@ -17,7 +26,7 @@ abstract class TypedPattern : Pattern {
         val inputs = popInputs(runtime)
 
         val outputs = eval.call(*inputs)
-        outputs.forEach { runtime.stack.push(it) }
+        outputs?.forEach { runtime.stack.push(it) }
     }
 
     private fun popInputs(runtime: Runtime): Array<Any> = eval.parameters.let { params ->
@@ -27,16 +36,11 @@ abstract class TypedPattern : Pattern {
         val passRuntime = params[0].type.classifier?.equals(Runtime::class) ?: false
         if (passRuntime) numInputs -= 1
 
-        val inputs = mutableListOf<Any>()
-        for (i in 0 until numInputs) {
-            if (runtime.stack.empty()) {
-                val s = if (numInputs == 1) { "" } else { "s" }
-                throw IllegalArgumentException("$name expected $numInputs input$s but got $i")
-            }
-            inputs.add(runtime.stack.pop())
+        val inputs = pop(runtime, numInputs).toTypedArray<Any>()
+        return if (passRuntime) {
+            arrayOf(runtime, *inputs)
+        } else {
+            inputs
         }
-
-        if (passRuntime) inputs += runtime
-        return inputs.asReversed().toTypedArray()
     }
 }

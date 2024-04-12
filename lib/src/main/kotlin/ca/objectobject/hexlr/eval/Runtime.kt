@@ -22,6 +22,16 @@ data class Runtime(
         action.eval(this)
     }
 
+    /**
+     * Pops n values from the stack, returning the lowest iota first.
+     */
+    fun pop(n: Int = 1) = (0 until n).map { stack.pop() }.asReversed()
+
+    /**
+     * Pops n values from the stack, returning the lowest iota first. Returns null if the stack has less than n iotas.
+     */
+    fun popOrNull(n: Int = 1) = if (stack.count() >= n) { pop(n) } else { null }
+
     private fun pushEscaped(action: Action): Iota {
         val iota = when (action) {
             is Pattern -> PatternIota(action)

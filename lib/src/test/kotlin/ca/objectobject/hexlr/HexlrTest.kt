@@ -105,6 +105,35 @@ class HexlrTest {
                 NumberIota(1),
                 NumberIota(-1),
             ),
+            "Vacant Reflection" to listOf(ListIota()),
+            """
+                Numerical Reflection: 0
+                Single's Purification
+            """ to listOf(ListIota(NumberIota(0))),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Flock's Gambit
+            """ to listOf(ListIota(NumberIota(0), NumberIota(1))),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Flock's Gambit
+                Flock's Disintegration
+            """ to listOf(
+                NumberIota(1),
+                NumberIota(0),
+            ),
+            """
+                Consideration: Numerical Reflection: 1
+                Consideration: Numerical Reflection: 2
+                Consideration: Additive Distillation
+                Numerical Reflection: 3
+                Flock's Gambit
+                Hermes' Gambit
+            """ to listOf(NumberIota(3)),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

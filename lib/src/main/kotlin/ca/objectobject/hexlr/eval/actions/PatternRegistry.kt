@@ -12,7 +12,7 @@ object PatternRegistry {
         "Multiplicative Distillation" to OpMultiply,
         "Division Distillation" to OpDivide,
 
-        "Vector Exaltation" to OpCreateVec,
+        "Vector Exaltation" to OpSlurpVec,
         "Vector Disintegration" to OpSplatVec,
 
         "Vector Reflection Zero" to OpVector(),
@@ -22,6 +22,11 @@ object PatternRegistry {
         "Vector Reflection -Y" to OpVector(y=-1),
         "Vector Reflection +Z" to OpVector(z=1),
         "Vector Reflection -Z" to OpVector(z=-1),
+
+        "Vacant Reflection" to OpEmptyList,
+        "Single's Purification" to OpSingletonList,
+        "Flock's Gambit" to OpSlurpList,
+        "Flock's Disintegration" to OpSplatList,
 
         "True Reflection" to OpTrue,
         "False Reflection" to OpFalse,
@@ -34,9 +39,9 @@ object PatternRegistry {
 
     )
 
-    fun get(name: String) = PATTERNS[name] ?: TODO()
+    fun get(name: String) = PATTERNS[name] ?: TODO(name)
 
-    fun get(name: String, arg: String) = PATTERNS_WITH_ARG[name]?.get(arg) ?: TODO()
+    fun get(name: String, arg: String) = PATTERNS_WITH_ARG[name]?.get(arg) ?: TODO("$name: $arg")
 
     private fun addAll(action: Action, vararg names: String) = names.map { it to action }.toTypedArray()
 }
