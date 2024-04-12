@@ -31,12 +31,16 @@ fun main() {
         Numerical Reflection: 1
         Numerical Reflection: 2
         Additive Distillation
+        Numerical Reflection: 6
+        Division Distillation
     """.trimIndent()
 
     val actions = parseActions(source)
     println(actions)
 
     val runtime = Runtime()
-    runtime.execute(actions)
-    println(runtime)
+    for (action in actions) {
+        runtime.execute(action)
+        println(runtime)
+    }
 }

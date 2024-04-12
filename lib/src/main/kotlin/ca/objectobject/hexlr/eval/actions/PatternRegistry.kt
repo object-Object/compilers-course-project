@@ -7,6 +7,9 @@ object PatternRegistry {
     private val PATTERNS: Map<String, Action> = mapOf(
         *addAll(OpEscape, "Consideration", "\\"),
         "Additive Distillation" to OpAdd,
+        "Subtractive Distillation" to OpSubtract,
+        "Multiplicative Distillation" to OpMultiply,
+        "Division Distillation" to OpDivide,
     )
 
     private val PATTERNS_WITH_ARG: Map<String, Map<String, Action>> = mapOf(

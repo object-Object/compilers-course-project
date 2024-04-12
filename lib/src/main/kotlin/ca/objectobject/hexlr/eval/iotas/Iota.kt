@@ -6,4 +6,6 @@ interface Iota
 
 data class PatternIota(val pattern: Pattern) : Iota
 
-data class NumberIota(val number: Double) : Iota
+sealed interface ArithmeticIota : Iota
+
+data class NumberIota(val number: Double) : ArithmeticIota

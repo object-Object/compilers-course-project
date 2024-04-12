@@ -24,7 +24,7 @@ abstract class TypedPattern : Pattern {
             val iota = runtime.stack.pop()
             if (!type.isInstance(iota)) throw TypeError(iota, type)
             iota
-        }
+        }.asReversed()
 
         val outputs = eval(runtime, inputs)
 
