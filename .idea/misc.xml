@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ANTLRGenerationPreferences">
+    <option name="perGrammarGenerationSettings">
+      <list>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/lib/src/main/antlr/HexlrParser.g4" />
+          <option name="outputDir" value="" />
+          <option name="libDir" value="C:\Users\object\Documents\University\Year4\Compilers\compilers-course-project\lib\build\generated-src\antlr\main\ca\objectobject\hexlr\parser" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/lib/src/main/antlr/HexlrLexer.g4" />
+          <option name="outputDir" value="" />
+          <option name="libDir" value="C:\Users\object\Documents\University\Year4\Compilers\compilers-course-project\lib\build\generated-src\antlr\main\ca\objectobject\hexlr\parser" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+      </list>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_18" default="true" project-jdk-name="openjdk-18" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
