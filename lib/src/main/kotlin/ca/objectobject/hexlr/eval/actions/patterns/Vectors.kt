@@ -1,14 +1,18 @@
 package ca.objectobject.hexlr.eval.actions.patterns
 
-import ca.objectobject.hexlr.eval.Runtime
-import ca.objectobject.hexlr.eval.actions.Pattern3
+import ca.objectobject.hexlr.eval.actions.EvalFn
+import ca.objectobject.hexlr.eval.actions.TypedPattern
 import ca.objectobject.hexlr.eval.iotas.NumberIota
 import ca.objectobject.hexlr.eval.iotas.VectorIota
 
-data object OpCreateVec :
-    Pattern3<NumberIota, NumberIota, NumberIota>(NumberIota::class, NumberIota::class, NumberIota::class) {
-    override val outputTypes = listOf(VectorIota::class)
+data object OpCreateVec : TypedPattern() {
+    override val eval: EvalFn = ::eval
 
-    override fun eval(runtime: Runtime, input0: NumberIota, input1: NumberIota, input2: NumberIota) =
-        listOf(VectorIota(input0.value, input1.value, input2.value))
+    fun eval(x: NumberIota, y: NumberIota, z: NumberIota) = listOf(VectorIota(x, y, z))
+}
+
+data object OpSplatVec : TypedPattern() {
+    override val eval: EvalFn = ::eval
+
+    fun eval(vec: VectorIota) = listOf(vec.x, vec.y, vec.z).map(::NumberIota)
 }

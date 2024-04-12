@@ -82,6 +82,29 @@ class HexlrTest {
                 Consideration: Numerical Reflection: 1
                 Hermes' Gambit
             """ to listOf(NumberIota(1)),
+            """
+                Vector Reflection -X
+                Vector Reflection +Y
+                Vector Reflection +Z
+                Numerical Reflection: 2
+                Multiplicative Distillation
+                Additive Distillation
+                Additive Distillation
+            """ to listOf(VectorIota(-1, 1, 2)),
+            """
+                Vector Reflection -X
+                Vector Reflection +Y
+                Vector Reflection +Z
+                Numerical Reflection: 2
+                Multiplicative Distillation
+                Additive Distillation
+                Additive Distillation
+                Vector Disintegration
+            """ to listOf(
+                NumberIota(2),
+                NumberIota(1),
+                NumberIota(-1),
+            ),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

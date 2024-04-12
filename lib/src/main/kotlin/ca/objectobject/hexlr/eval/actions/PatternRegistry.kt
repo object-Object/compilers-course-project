@@ -1,6 +1,7 @@
 package ca.objectobject.hexlr.eval.actions
 
 import ca.objectobject.hexlr.eval.actions.patterns.*
+import ca.objectobject.hexlr.eval.actions.patterns.arithmetic.*
 
 object PatternRegistry {
     private val PATTERNS: Map<String, Action> = mapOf(
@@ -12,6 +13,15 @@ object PatternRegistry {
         "Division Distillation" to OpDivide,
 
         "Vector Exaltation" to OpCreateVec,
+        "Vector Disintegration" to OpSplatVec,
+
+        "Vector Reflection Zero" to OpVector(),
+        "Vector Reflection +X" to OpVector(x=1),
+        "Vector Reflection -X" to OpVector(x=-1),
+        "Vector Reflection +Y" to OpVector(y=1),
+        "Vector Reflection -Y" to OpVector(y=-1),
+        "Vector Reflection +Z" to OpVector(z=1),
+        "Vector Reflection -Z" to OpVector(z=-1),
 
         "True Reflection" to OpTrue,
         "False Reflection" to OpFalse,

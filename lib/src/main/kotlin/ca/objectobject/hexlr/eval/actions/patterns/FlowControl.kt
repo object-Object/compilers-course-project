@@ -1,37 +1,31 @@
 package ca.objectobject.hexlr.eval.actions.patterns
 
 import ca.objectobject.hexlr.eval.Runtime
-import ca.objectobject.hexlr.eval.actions.Pattern1
-import ca.objectobject.hexlr.eval.actions.Pattern3
+import ca.objectobject.hexlr.eval.actions.EvalFn
 import ca.objectobject.hexlr.eval.actions.TypedPattern
 import ca.objectobject.hexlr.eval.iotas.BooleanIota
 import ca.objectobject.hexlr.eval.iotas.EvaluableIota
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.eval.iotas.PatternIota
 
-data object OpTrue : TypedPattern() {
-    override val outputTypes = listOf(BooleanIota::class)
+data object OpIf : TypedPattern() {
+    override val eval: EvalFn = ::eval
 
-    override fun eval(runtime: Runtime, inputs: List<Iota>) = listOf(BooleanIota(true))
+    fun eval(condition: BooleanIota, valueIf: Iota, valueElse: Iota) = listOf(
+        if (condition.value) {
+            valueIf
+        } else {
+            valueElse
+        }
+    )
 }
 
-data object OpFalse : TypedPattern() {
-    override val outputTypes = listOf(BooleanIota::class)
+data object OpEval : TypedPattern() {
+    override val eval: EvalFn = ::eval
 
-    override fun eval(runtime: Runtime, inputs: List<Iota>) = listOf(BooleanIota(false))
-}
-
-data object OpIf : Pattern3<BooleanIota, Iota, Iota>(BooleanIota::class, Iota::class, Iota::class) {
-    override val outputTypes = listOf(Iota::class)
-
-    override fun eval(runtime: Runtime, input0: BooleanIota, input1: Iota, input2: Iota) =
-        listOf(if (input0.value) { input1 } else { input2 })
-}
-
-data object OpEval : Pattern1<EvaluableIota>(EvaluableIota::class) {
-    override fun eval(runtime: Runtime, input0: EvaluableIota): List<Iota> {
-        when (input0) {
-            is PatternIota -> runtime.execute(input0.value)
+    fun eval(runtime: Runtime, iota: EvaluableIota): List<Iota> {
+        when (iota) {
+            is PatternIota -> runtime.execute(iota.value)
         }
         return listOf()
     }

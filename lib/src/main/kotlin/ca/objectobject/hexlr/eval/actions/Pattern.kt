@@ -1,75 +1,42 @@
 package ca.objectobject.hexlr.eval.actions
 
-import ca.objectobject.hexlr.TypeError
 import ca.objectobject.hexlr.eval.Runtime
 import ca.objectobject.hexlr.eval.iotas.Iota
-import kotlin.reflect.KClass
+import kotlin.reflect.KCallable
 
-interface Pattern : Action
+typealias EvalFn = KCallable<Iterable<Iota>>
+
+interface Pattern : Action {
+    val name get() = this::class.simpleName ?: this.toString()
+}
 
 abstract class TypedPattern : Pattern {
-    /**
-     * Input iota types. The rightmost value is at the top of the stack.
-     */
-    open val inputTypes: List<KClass<out Iota>> = listOf()
-
-    /**
-     * Output iota types. The rightmost value is at the top of the stack.
-     */
-    open val outputTypes: List<KClass<out Iota>> = listOf()
-
-    abstract fun eval(runtime: Runtime, inputs: List<Iota>): List<Iota>
+    abstract val eval: EvalFn
 
     override fun eval(runtime: Runtime) {
-        val inputs = inputTypes.asReversed().map { type ->
-            val iota = runtime.stack.pop()
-            if (!type.isInstance(iota)) throw TypeError(iota, type)
-            iota
-        }.asReversed()
+        val inputs = popInputs(runtime)
 
-        val outputs = eval(runtime, inputs)
+        val outputs = eval.call(*inputs)
+        outputs.forEach { runtime.stack.push(it) }
+    }
 
-        if (outputs.count() != outputTypes.count()) {
-            throw RuntimeException("Expected ${outputTypes.count()} returns, got ${outputs.count()}")
+    private fun popInputs(runtime: Runtime): Array<Any> = eval.parameters.let { params ->
+        var numInputs = params.count()
+        if (numInputs == 0) return arrayOf()
+
+        val passRuntime = params[0].type.classifier?.equals(Runtime::class) ?: false
+        if (passRuntime) numInputs -= 1
+
+        val inputs = mutableListOf<Any>()
+        for (i in 0 until numInputs) {
+            if (runtime.stack.empty()) {
+                val s = if (numInputs == 1) { "" } else { "s" }
+                throw IllegalArgumentException("$name expected $numInputs input$s but got $i")
+            }
+            inputs.add(runtime.stack.pop())
         }
 
-        for ((type, iota) in outputTypes.zip(outputs)) {
-            if (!type.isInstance(iota)) throw TypeError(iota, type)
-            runtime.stack.push(iota)
-        }
-    }
-}
-
-abstract class Pattern1<T0 : Iota>(t0: KClass<T0>) : TypedPattern() {
-    override val inputTypes = listOf(t0)
-
-    abstract fun eval(runtime: Runtime, input0: T0): List<Iota>
-
-    @Suppress("UNCHECKED_CAST")
-    override fun eval(runtime: Runtime, inputs: List<Iota>): List<Iota> {
-        return eval(runtime, inputs[0] as T0)
-    }
-}
-
-abstract class Pattern2<T0 : Iota, T1 : Iota>(t0: KClass<T0>, t1: KClass<T1>) : TypedPattern() {
-    override val inputTypes = listOf(t0, t1)
-
-    abstract fun eval(runtime: Runtime, input0: T0, input1: T1): List<Iota>
-
-    @Suppress("UNCHECKED_CAST")
-    override fun eval(runtime: Runtime, inputs: List<Iota>): List<Iota> {
-        return eval(runtime, inputs[0] as T0, inputs[1] as T1)
-    }
-}
-
-abstract class Pattern3<T0 : Iota, T1 : Iota, T2 : Iota>(t0: KClass<T0>, t1: KClass<T1>, t2: KClass<T2>) :
-    TypedPattern() {
-    override val inputTypes = listOf(t0, t1, t2)
-
-    abstract fun eval(runtime: Runtime, input0: T0, input1: T1, input2: T2): List<Iota>
-
-    @Suppress("UNCHECKED_CAST")
-    override fun eval(runtime: Runtime, inputs: List<Iota>): List<Iota> {
-        return eval(runtime, inputs[0] as T0, inputs[1] as T1, inputs[2] as T2)
+        if (passRuntime) inputs += runtime
+        return inputs.asReversed().toTypedArray()
     }
 }

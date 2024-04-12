@@ -32,7 +32,7 @@ fun main() {
         Numerical Reflection: 2
         Numerical Reflection: 3
         Vector Exaltation
-        Numerical Reflection: 2
+        True Reflection
         Division Distillation
     """.trimIndent()
 

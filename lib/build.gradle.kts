@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     antlr(libs.antlr)
+    implementation(kotlin("reflect"))
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.junit.engine)

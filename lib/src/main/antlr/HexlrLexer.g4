@@ -39,7 +39,6 @@ Define_PATTERN: PATTERN -> type(PATTERN);
 
 EQUALS: '=' -> pushMode(DefineSignature);
 
-
 Define_INTROSPECTION:
     INTROSPECTION -> type(INTROSPECTION), popMode;
 
