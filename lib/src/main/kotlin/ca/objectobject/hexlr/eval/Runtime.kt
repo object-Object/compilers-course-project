@@ -1,8 +1,6 @@
 package ca.objectobject.hexlr.eval
 
 import ca.objectobject.hexlr.TypeError
-import ca.objectobject.hexlr.eval.actions.Action
-import ca.objectobject.hexlr.eval.actions.Pattern
 import ca.objectobject.hexlr.eval.actions.patterns.OpEscape
 import ca.objectobject.hexlr.eval.actions.patterns.OpLeftParen
 import ca.objectobject.hexlr.eval.actions.patterns.OpRightParen
@@ -18,22 +16,23 @@ data class Runtime(
     var escapeLevel = 0
     private val newListContents = mutableListOf<Iota>()
 
-    fun execute(actions: List<Action>) = actions.forEach(::execute)
+    fun execute(iotas: List<Iota>) = iotas.forEach(::execute)
 
-    fun execute(action: Action) {
+    fun execute(iota: Iota) {
         if (escapeNext) {
-            pushEscaped(action)
+            pushEscaped(iota)
             escapeNext = false
             return
         }
 
-        if (escapeLevel > 0 && action != OpEscape) {
-            when (action) {
-                OpLeftParen -> escapeLevel += 1
-                OpRightParen -> escapeLevel -= 1
+        if (escapeLevel > 0 && iota != OpEscape.toIota()) {
+            when (iota) {
+                OpLeftParen.toIota() -> escapeLevel += 1
+                OpRightParen.toIota() -> escapeLevel -= 1
+                else -> {}
             }
             if (escapeLevel > 0) {
-                pushEscaped(action)
+                pushEscaped(iota)
             } else {
                 stack.push(ListIota(newListContents.toList()))
                 newListContents.clear()
@@ -41,7 +40,11 @@ data class Runtime(
             return
         }
 
-        action.eval(this)
+        if (iota is PatternIota) {
+            iota.value.eval(this)
+        } else {
+            throw TypeError(iota, PatternIota::class)
+        }
     }
 
     /**
@@ -54,8 +57,7 @@ data class Runtime(
      */
     fun popOrNull(n: Int = 1) = if (stack.count() >= n) { pop(n) } else { null }
 
-    private fun pushEscaped(action: Action) {
-        val iota = action.toIota()
+    private fun pushEscaped(iota: Iota) {
         if (escapeLevel > 0) {
             newListContents.add(iota)
         } else {

@@ -8,22 +8,43 @@ import ca.objectobject.hexlr.eval.actions.patterns.OpLeftParen
 import ca.objectobject.hexlr.eval.actions.patterns.OpRightParen
 import ca.objectobject.hexlr.eval.actions.patterns.OpTrue
 import ca.objectobject.hexlr.eval.iotas.*
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.assertEquals
 
 class HexlrTest {
     @ParameterizedTest
-    @MethodSource("getData")
+    @MethodSource("getData_programProducesExpectedStack")
     fun programProducesExpectedStack(program: String, want: List<Iota>) {
         val runtime = execute(program.trimIndent())
         assertEquals(want.asReversed(), runtime.stack.toList())
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = [
+        "This Pattern Does Not Exist",
+        """
+            True Reflection
+            Hermes' Gambit
+        """,
+        """
+            True Reflection
+            Single's Purification
+            Hermes' Gambit
+        """,
+    ])
+    fun invalidProgramThrowsException(program: String) {
+        assertThrows<Throwable> {
+            execute(program.trimIndent())
+        }
+    }
+
     companion object {
         @JvmStatic
-        fun getData() = listOf(
+        fun getData_programProducesExpectedStack() = listOf(
             "" to listOf(),
             "Numerical Reflection: 0" to listOf(NumberIota(0)),
             "Numerical Reflection: 1" to listOf(NumberIota(1)),
@@ -183,14 +204,14 @@ class HexlrTest {
                 Numerical Reflection: 3
                 Flock's Gambit
             """ to listOf(ListIota(OpLeftParen.toIota(), BooleanIota(true), OpRightParen.toIota())),
-//            """
-//                Consideration: Introspection
-//                True Reflection
-//                Consideration: Retrospection
-//                Numerical Reflection: 3
-//                Flock's Gambit
-//                Hermes' Gambit
-//            """ to listOf(ListIota(BooleanIota(true))),
+            """
+                Consideration: Introspection
+                True Reflection
+                Consideration: Retrospection
+                Numerical Reflection: 3
+                Flock's Gambit
+                Hermes' Gambit
+            """ to listOf(ListIota(BooleanIota(true))),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

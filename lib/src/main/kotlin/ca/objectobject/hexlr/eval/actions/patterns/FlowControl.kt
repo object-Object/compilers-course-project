@@ -20,8 +20,8 @@ data object OpEval : TypedPattern() {
 
     fun eval(runtime: Runtime, iota: EvaluableIota): Iterable<Iota>? {
         when (iota) {
-            is PatternIota -> runtime.execute(iota.value)
-            is ListIota -> runtime.execute(iota.values.map { (it as PatternIota).value })
+            is PatternIota -> runtime.execute(iota)
+            is ListIota -> runtime.execute(iota.values)
         }
         return null
     }

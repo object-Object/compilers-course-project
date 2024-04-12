@@ -1,7 +1,7 @@
 package ca.objectobject.hexlr
 
-import ca.objectobject.hexlr.eval.actions.Action
 import ca.objectobject.hexlr.eval.Runtime
+import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.parser.*
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
@@ -16,14 +16,14 @@ fun parseTree(source: String): ParseTree {
     return parser.start()
 }
 
-fun parseActions(source: String): List<Action> {
+fun parseIotas(source: String): List<Iota> {
     val tree = parseTree(source)
     return HexlrVisitor().visit(tree)
 }
 
 fun execute(source: String): Runtime {
-    val actions = parseActions(source)
-    return Runtime().apply { execute(actions) }
+    val iotas = parseIotas(source)
+    return Runtime().apply { execute(iotas) }
 }
 
 fun main() {
@@ -36,12 +36,12 @@ fun main() {
         Division Distillation
     """.trimIndent()
 
-    val actions = parseActions(source)
-    println(actions)
+    val iotas = parseIotas(source)
+    println(iotas)
 
     val runtime = Runtime()
-    for (action in actions) {
-        runtime.execute(action)
+    for (iota in iotas) {
+        runtime.execute(iota)
         println(runtime)
     }
 }

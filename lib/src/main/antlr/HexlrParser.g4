@@ -4,12 +4,11 @@ options {
     tokenVocab=HexlrLexer;
 }
 
-start: EOL* actions? EOL* EOF;
+start: EOL* statements? EOL* EOF;
 
-actions  : action (EOL+ action)*;
-patterns : pattern (EOL+ pattern)*;
+statements: statement (EOL+ statement)*;
 
-action: pattern | directive;
+statement: pattern | directive;
 
 pattern:
     name=(
@@ -28,7 +27,7 @@ directive: defineDirective;
 defineDirective:
     DEFINE name=PATTERN (EQUALS signature)? EOL+ block;
 
-block: INTROSPECTION (EOL+ patterns)? EOL+ RETROSPECTION;
+block: INTROSPECTION (EOL+ statements)? EOL+ RETROSPECTION;
 
 signature:
     inputs=types ARROW outputs=types

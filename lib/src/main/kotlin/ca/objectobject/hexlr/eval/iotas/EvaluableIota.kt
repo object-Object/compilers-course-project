@@ -1,8 +1,10 @@
 package ca.objectobject.hexlr.eval.iotas
 
-import ca.objectobject.hexlr.eval.actions.Action
 import ca.objectobject.hexlr.eval.actions.Pattern
 
+/**
+ * Iotas that can be evaluated by Hermes' Gambit.
+ */
 sealed interface EvaluableIota : Iota
 
 data class PatternIota(val value: Pattern) : EvaluableIota
