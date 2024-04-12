@@ -8,6 +8,7 @@ junit = "5.10.2"
 antlr = { module="org.antlr:antlr4", version.ref="antlr" }
 kotlin-test = { module="org.jetbrains.kotlin:kotlin-test-junit5" }
 junit-engine = { module="org.junit.jupiter:junit-jupiter-engine", version.ref="junit" }
+junit-params = { module="org.junit.jupiter:junit-jupiter-params", version.ref="junit" }
 junit-launcher = { module="org.junit.platform:junit-platform-launcher" }
 
 [plugins]

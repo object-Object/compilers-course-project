@@ -21,9 +21,9 @@ fun parseActions(source: String): List<Action> {
     return HexlrVisitor().visit(tree)
 }
 
-fun execute(source: String) {
+fun execute(source: String): Runtime {
     val actions = parseActions(source)
-    Runtime().execute(actions)
+    return Runtime().apply { execute(actions) }
 }
 
 fun main() {

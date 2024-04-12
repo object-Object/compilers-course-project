@@ -13,6 +13,7 @@ dependencies {
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.junit.engine)
+    testImplementation(libs.junit.params)
     testRuntimeOnly(libs.junit.launcher)
 }
 

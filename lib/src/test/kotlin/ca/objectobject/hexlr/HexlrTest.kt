@@ -3,13 +3,63 @@
  */
 package ca.objectobject.hexlr
 
-import kotlin.test.Test
+import ca.objectobject.hexlr.eval.iotas.Iota
+import ca.objectobject.hexlr.eval.iotas.NumberIota
+import ca.objectobject.hexlr.eval.iotas.VectorIota
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import kotlin.test.assertEquals
 
 class HexlrTest {
-    @Test fun emptyProgramReturnsEmptyList() {
-        val program = ""
-        val actions = parse(program)
-        assertEquals(actions, listOf())
+    @ParameterizedTest
+    @MethodSource("getData")
+    fun programProducesExpectedStack(program: String, want: List<Iota>) {
+        val runtime = execute(program.trimIndent())
+        assertEquals(want.asReversed(), runtime.stack.toList())
+    }
+
+    companion object {
+        @JvmStatic
+        fun getData() = listOf<Pair<String, List<Iota>>>(
+            "" to listOf(),
+            "Numerical Reflection: 0" to listOf(NumberIota(0.0)),
+            "Numerical Reflection: 1" to listOf(NumberIota(1.0)),
+            "Numerical Reflection: -2.5" to listOf(NumberIota(-2.5)),
+            "Numerical Reflection: 1e2" to listOf(NumberIota(100.0)),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+            """ to listOf(
+                NumberIota(1.0),
+                NumberIota(0.0),
+            ),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Vector Exaltation
+            """ to listOf(VectorIota(0.0, 1.0, 2.0)),
+            """
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Additive Distillation
+            """ to listOf(NumberIota(3.0)),
+            """
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Subtractive Distillation
+            """ to listOf(NumberIota(-1.0)),
+            """
+                Numerical Reflection: 2
+                Numerical Reflection: 3
+                Multiplicative Distillation
+            """ to listOf(NumberIota(6.0)),
+            """
+                Numerical Reflection: 1
+                Numerical Reflection: 2
+                Division Distillation
+            """ to listOf(NumberIota(0.5)),
+        ).map { Arguments.of(it.first, it.second) }
     }
 }
