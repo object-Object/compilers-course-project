@@ -5,6 +5,18 @@ import ca.objectobject.hexlr.eval.actions.Pattern
 
 data object OpEscape : Pattern {
     override fun eval(runtime: Runtime) {
-        runtime.escapeSingle = true
+        runtime.escapeNext = true
+    }
+}
+
+data object OpLeftParen : Pattern {
+    override fun eval(runtime: Runtime) {
+        runtime.escapeLevel += 1
+    }
+}
+
+data object OpRightParen : Pattern {
+    override fun eval(runtime: Runtime) {
+        TODO() // replace with mishap exception
     }
 }

@@ -2,6 +2,7 @@ package ca.objectobject.hexlr.eval.actions
 
 import ca.objectobject.hexlr.eval.Runtime
 import ca.objectobject.hexlr.eval.iotas.Iota
+import ca.objectobject.hexlr.eval.iotas.PatternIota
 import kotlin.reflect.KCallable
 
 typealias EvalFn = KCallable<Iterable<Iota>?>
@@ -17,6 +18,8 @@ interface Pattern : Action {
         if (n > size) throw IllegalArgumentException("$name expected $n input(s) but got $size")
         return runtime.pop(n)
     }
+
+    override fun toIota() = PatternIota(this)
 }
 
 abstract class TypedPattern : Pattern {

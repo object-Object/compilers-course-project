@@ -1,5 +1,6 @@
 package ca.objectobject.hexlr.eval.iotas
 
+import ca.objectobject.hexlr.eval.actions.Action
 import ca.objectobject.hexlr.eval.actions.Pattern
 
 sealed interface EvaluableIota : Iota

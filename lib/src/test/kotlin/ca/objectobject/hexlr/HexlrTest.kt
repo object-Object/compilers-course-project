@@ -3,6 +3,9 @@
  */
 package ca.objectobject.hexlr
 
+import ca.objectobject.hexlr.eval.actions.patterns.OpEscape
+import ca.objectobject.hexlr.eval.actions.patterns.OpLeftParen
+import ca.objectobject.hexlr.eval.actions.patterns.OpRightParen
 import ca.objectobject.hexlr.eval.actions.patterns.OpTrue
 import ca.objectobject.hexlr.eval.iotas.*
 import org.junit.jupiter.params.ParameterizedTest
@@ -73,7 +76,7 @@ class HexlrTest {
                 Numerical Reflection: 2
                 Augur's Exaltation
             """ to listOf(NumberIota(2)),
-            "Consideration: True Reflection" to listOf(PatternIota(OpTrue)),
+            "Consideration: True Reflection" to listOf(OpTrue.toIota()),
             """
                 Consideration: True Reflection
                 Hermes' Gambit
@@ -134,6 +137,60 @@ class HexlrTest {
                 Flock's Gambit
                 Hermes' Gambit
             """ to listOf(NumberIota(3)),
+            """
+                {
+                }
+            """ to listOf(ListIota()),
+            """
+                {
+                    True Reflection
+                }
+            """ to listOf(ListIota(OpTrue.toIota())),
+            """
+                {
+                    {
+                    }
+                }
+            """ to listOf(ListIota(OpLeftParen.toIota(), OpRightParen.toIota())),
+            """
+                {
+                    Consideration: Introspection
+                }
+            """ to listOf(ListIota(OpLeftParen.toIota())),
+            """
+                {
+                    Consideration: Retrospection
+                }
+            """ to listOf(ListIota(OpRightParen.toIota())),
+            """
+                {
+                    Consideration: {
+                        Consideration: Consideration
+                    Consideration: }
+                }
+            """ to listOf(ListIota(OpLeftParen.toIota(), OpEscape.toIota(), OpRightParen.toIota())),
+            """
+                {
+                    Consideration: Consideration
+                    True Reflection 
+                }
+                Hermes' Gambit
+            """ to listOf(OpTrue.toIota()),
+            """
+                Consideration: Introspection
+                True Reflection
+                Consideration: Retrospection
+                Numerical Reflection: 3
+                Flock's Gambit
+            """ to listOf(ListIota(OpLeftParen.toIota(), BooleanIota(true), OpRightParen.toIota())),
+//            """
+//                Consideration: Introspection
+//                True Reflection
+//                Consideration: Retrospection
+//                Numerical Reflection: 3
+//                Flock's Gambit
+//                Hermes' Gambit
+//            """ to listOf(ListIota(BooleanIota(true))),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

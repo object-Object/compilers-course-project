@@ -6,6 +6,8 @@ import ca.objectobject.hexlr.eval.actions.patterns.arithmetic.*
 object PatternRegistry {
     private val PATTERNS: Map<String, Action> = mapOf(
         *addAll(OpEscape, "Consideration", "\\"),
+        *addAll(OpLeftParen, "Introspection", "{"),
+        *addAll(OpRightParen, "Retrospection", "}"),
 
         "Additive Distillation" to OpAdd,
         "Subtractive Distillation" to OpSubtract,
