@@ -4,6 +4,7 @@ import ca.objectobject.hexlr.eval.PatternRegistry
 import ca.objectobject.hexlr.eval.patterns.OpEscape
 import ca.objectobject.hexlr.eval.patterns.OpNumber
 import ca.objectobject.hexlr.eval.iotas.Iota
+import ca.objectobject.hexlr.eval.patterns.OpMask
 import ca.objectobject.hexlr.parser.HexlrParser.*
 
 class HexlrVisitor : HexlrParserBaseVisitor<List<Iota>>() {
@@ -18,4 +19,6 @@ class HexlrVisitor : HexlrParserBaseVisitor<List<Iota>>() {
     override fun visitEscapedPattern(ctx: EscapedPatternContext) = listOf(OpEscape.toIota()) + visitChildren(ctx)
 
     override fun visitNumberPattern(ctx: NumberPatternContext) = listOf(OpNumber(ctx.NUMBER().text).toIota())
+
+    override fun visitMaskPattern(ctx: MaskPatternContext) = listOf(OpMask(ctx.MASK().text).toIota())
 }

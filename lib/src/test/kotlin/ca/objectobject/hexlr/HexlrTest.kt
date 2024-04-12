@@ -35,6 +35,24 @@ class HexlrTest {
             Single's Purification
             Hermes' Gambit
         """,
+        "Bookkeeper's Gambit: -",
+        "Bookkeeper's Gambit: v",
+        """
+            True Reflection
+            Bookkeeper's Gambit: --
+        """,
+        """
+            True Reflection
+            Bookkeeper's Gambit: -v
+        """,
+        """
+            True Reflection
+            Bookkeeper's Gambit: v-
+        """,
+        """
+            True Reflection
+            Bookkeeper's Gambit: vv
+        """,
     ])
     fun invalidProgramThrowsException(program: String) {
         assertThrows<Throwable> {
@@ -212,6 +230,24 @@ class HexlrTest {
                 Flock's Gambit
                 Hermes' Gambit
             """ to listOf(ListIota(BooleanIota(true))),
+            """
+                Numerical Reflection: 0
+                Bookkeeper's Gambit: -
+            """ to listOf(NumberIota(0)),
+            """
+                Numerical Reflection: 0
+                Bookkeeper's Gambit: v
+            """ to listOf(),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+                Bookkeeper's Gambit: v
+            """ to listOf(NumberIota(0)),
+            """
+                Numerical Reflection: 0
+                Numerical Reflection: 1
+                Bookkeeper's Gambit: v-
+            """ to listOf(NumberIota(1)),
         ).map { Arguments.of(it.first, it.second) }
     }
 }
