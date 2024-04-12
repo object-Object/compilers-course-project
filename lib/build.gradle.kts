@@ -32,19 +32,12 @@ tasks {
     }
 
     generateGrammarSource {
-        val baseOutputDirectory = outputDirectory
-        outputDirectory = file("$baseOutputDirectory/ca/objectobject/hexlr/parser")
-
+        outputDirectory = file("$outputDirectory/ca/objectobject/hexlr/parser")
         arguments.addAll(listOf(
             "-package", "ca.objectobject.hexlr.parser",
             "-no-listener",
             "-visitor",
         ))
-
-        // ensure all files are up to date
-        doFirst {
-            delete(baseOutputDirectory)
-        }
     }
 
     named<Test>("test") {

@@ -17,11 +17,11 @@ pattern:
         | CONSIDERATION
         | INTROSPECTION
         | RETROSPECTION
-    )                                   # NormalPattern
+    )                                   # NamedPattern
     | CONSIDERATION COLON? pattern      # EscapedPattern
     | NUMERICAL_REFLECTION COLON NUMBER # NumberPattern
     | BOOKKEEPERS_GAMBIT COLON MASK     # MaskPattern
-    | name=PATTERN COLON arg=PATTERN    # ArgumentPattern;
+    | name=PATTERN COLON arg=PATTERN    # NamedPatternWithArg;
 
 directive: defineDirective;
 
