@@ -17,6 +17,7 @@ object PatternRegistry {
         "False Reflection" to OpFalse,
 
         "Augur's Exaltation" to OpIf,
+        "Hermes' Gambit" to OpEval,
     )
 
     private val PATTERNS_WITH_ARG: Map<String, Map<String, Action>> = mapOf(

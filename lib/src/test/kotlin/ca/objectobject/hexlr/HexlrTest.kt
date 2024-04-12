@@ -3,10 +3,8 @@
  */
 package ca.objectobject.hexlr
 
-import ca.objectobject.hexlr.eval.iotas.BooleanIota
-import ca.objectobject.hexlr.eval.iotas.Iota
-import ca.objectobject.hexlr.eval.iotas.NumberIota
-import ca.objectobject.hexlr.eval.iotas.VectorIota
+import ca.objectobject.hexlr.eval.actions.patterns.OpTrue
+import ca.objectobject.hexlr.eval.iotas.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -75,6 +73,15 @@ class HexlrTest {
                 Numerical Reflection: 2
                 Augur's Exaltation
             """ to listOf(NumberIota(2)),
+            "Consideration: True Reflection" to listOf(PatternIota(OpTrue)),
+            """
+                Consideration: True Reflection
+                Hermes' Gambit
+            """ to listOf(BooleanIota(true)),
+            """
+                Consideration: Numerical Reflection: 1
+                Hermes' Gambit
+            """ to listOf(NumberIota(1)),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

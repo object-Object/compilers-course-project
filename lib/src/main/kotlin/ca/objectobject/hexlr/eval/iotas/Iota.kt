@@ -2,11 +2,13 @@ package ca.objectobject.hexlr.eval.iotas
 
 import ca.objectobject.hexlr.eval.actions.Pattern
 
-interface Iota
+sealed interface Iota
 
 data class BooleanIota(val value: Boolean) : Iota
 
-data class PatternIota(val value: Pattern) : Iota
+sealed interface EvaluableIota : Iota
+
+data class PatternIota(val value: Pattern) : EvaluableIota
 
 sealed interface ArithmeticIota : Iota
 
