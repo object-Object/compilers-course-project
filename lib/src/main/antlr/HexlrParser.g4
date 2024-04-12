@@ -4,26 +4,31 @@ options {
     tokenVocab=HexlrLexer;
 }
 
-start: EOL* (action (EOL+ action)*)? EOL* EOF;
+start: EOL* actions? EOL* EOF;
+
+actions  : action (EOL+ action)*;
+patterns : pattern (EOL+ pattern)*;
 
 action: pattern | directive;
 
 pattern:
-    PATTERN                             # NormalPattern
-    | CONSIDERATION                     # NormalPattern
-    | INTROSPECTION                     # NormalPattern
-    | RETROSPECTION                     # NormalPattern
+    name=(
+        PATTERN
+        | CONSIDERATION
+        | INTROSPECTION
+        | RETROSPECTION
+    )                                   # NormalPattern
     | CONSIDERATION COLON? pattern      # EscapedPattern
     | NUMERICAL_REFLECTION COLON NUMBER # NumberPattern
     | BOOKKEEPERS_GAMBIT COLON MASK     # MaskPattern
-    | PATTERN COLON PATTERN             # ArgumentPattern;
+    | name=PATTERN COLON arg=PATTERN    # ArgumentPattern;
 
 directive: defineDirective;
 
 defineDirective:
-    DEFINE name=PATTERN (EQUALS signature)? block;
+    DEFINE name=PATTERN (EQUALS signature)? EOL+ block;
 
-block: INTROSPECTION pattern* RETROSPECTION;
+block: INTROSPECTION (EOL+ patterns)? EOL+ RETROSPECTION;
 
 signature:
     inputs=types ARROW outputs=types

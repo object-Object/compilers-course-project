@@ -8,8 +8,8 @@ DEFINE: '#define' -> pushMode(Define);
 
 COLON: ':';
 
-INTROSPECTION : '{';
-RETROSPECTION : '}';
+INTROSPECTION : '{' | 'Introspection';
+RETROSPECTION : '}' | 'Retrospection';
 CONSIDERATION : '\\' | 'Consideration';
 
 NUMERICAL_REFLECTION : 'Numerical Reflection';
@@ -21,19 +21,13 @@ MASK: [-v]+;
 
 PATTERN: PatternStartEnd (PatternMiddle* PatternStartEnd)?;
 
-// comments
+// comments/whitespace
 
-LINE_COMMENT: '//' (~[\r\n])* -> skip;
+COMMENT: (LineComment | InlineBlockComment) -> skip;
 
-INLINE_COMMENT: '/*' (INLINE_COMMENT | ~[\r\n])* '*/' -> skip;
-
-// treat block comments as line terminators to allow separating patterns with them
-BLOCK_COMMENT: '/*' (Comment | .)*? '*/' -> type(EOL);
-
-// whitespace
-
-// no skip here because line breaks are required to separate patterns
-EOL: [\r\n]+;
+// not skipped because line breaks are required to separate patterns
+// and treat block comments as line terminators to allow separating patterns with them
+EOL: ([\r\n] | BlockComment)+;
 
 WS: [ \t]+ -> skip;
 
@@ -43,12 +37,15 @@ mode Define;
 
 Define_PATTERN: PATTERN -> type(PATTERN);
 
-EQUALS: '=' -> popMode, pushMode(DefineSignature);
+EQUALS: '=' -> pushMode(DefineSignature);
+
 
 Define_INTROSPECTION:
     INTROSPECTION -> type(INTROSPECTION), popMode;
 
-Define_Skip: (Comment | WS | EOL) -> skip;
+Define_COMMENT : COMMENT -> skip;
+Define_EOL     : EOL     -> type(EOL);
+Define_WS      : WS      -> skip;
 
 // macro signature
 
@@ -61,10 +58,9 @@ ARROW   : '->';
 LSQUARE : '[';
 RSQUARE : ']';
 
-DefineSignature_INTROSPECTION:
-    INTROSPECTION -> type(INTROSPECTION), popMode;
-
-DefineSignature_Skip: (Comment | WS | EOL) -> skip;
+DefineSignature_COMMENT : COMMENT -> skip;
+DefineSignature_EOL     : EOL     -> type(EOL), popMode;
+DefineSignature_WS      : WS      -> skip;
 
 // fragments
 
@@ -75,4 +71,9 @@ fragment Exponent : [eE] Integer;
 fragment PatternStartEnd : [a-zA-Z];
 fragment PatternMiddle   : PatternStartEnd | [ '+\-];
 
-fragment Comment: LINE_COMMENT | INLINE_COMMENT | BLOCK_COMMENT;
+fragment LineComment: '//' (~[\r\n])*;
+
+fragment InlineBlockComment:
+    '/*' (InlineBlockComment | ~[\r\n])* '*/';
+
+fragment BlockComment: '/*' (BlockComment | .)*? '*/';

@@ -29,12 +29,9 @@ fun execute(source: String) {
 
 fun main() {
     val tree = parseTree("""
-        Mind's Reflection
-        Numerical Reflection: -10.5
-        // foo
-        /* bar
-        */
-        Vector Reflection Zero
+        #define Foo = Introspection ->
+        {
+        }
     """.trimIndent())
     println(tree)
 }
