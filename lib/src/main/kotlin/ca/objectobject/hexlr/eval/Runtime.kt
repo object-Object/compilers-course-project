@@ -6,7 +6,6 @@ import ca.objectobject.hexlr.eval.iotas.ListIota
 import ca.objectobject.hexlr.eval.iotas.NullIota
 import ca.objectobject.hexlr.eval.iotas.PatternIota
 import ca.objectobject.hexlr.eval.patterns.OpEscape
-import ca.objectobject.hexlr.eval.patterns.OpHalt
 import ca.objectobject.hexlr.eval.patterns.OpLeftParen
 import ca.objectobject.hexlr.eval.patterns.OpRightParen
 import java.util.*
@@ -17,22 +16,25 @@ open class Runtime(
 ) {
     var escapeNext = false
     var escapeLevel = 0
+    var shouldHalt = false
     private val newListContents = mutableListOf<Iota>()
 
     val isEscaping get() = escapeNext || escapeLevel > 0
 
-    fun execute(iotas: List<Iota>): Boolean {
+    fun execute(iotas: List<Iota>) {
         for (iota in iotas) {
-            if (!execute(iota)) return false
+            execute(iota)
+            if (shouldHalt) return
         }
-        return true
     }
 
-    fun execute(iota: Iota): Boolean {
+    fun execute(iota: Iota) {
+        shouldHalt = false
+
         if (escapeNext) {
             pushEscaped(iota)
             escapeNext = false
-            return true
+            return
         }
 
         if (escapeLevel > 0 && iota != OpEscape.toIota()) {
@@ -47,18 +49,11 @@ open class Runtime(
                 stack.push(ListIota(newListContents.toList()))
                 newListContents.clear()
             }
-            return true
+            return
         }
 
         if (iota !is PatternIota) throw TypeError(iota, PatternIota::class)
-
-        return when (iota.value) {
-            OpHalt -> false
-            else -> {
-                executePattern(iota.value)
-                true
-            }
-        }
+        executePattern(iota.value)
     }
 
     open fun executePattern(pattern: Pattern) {

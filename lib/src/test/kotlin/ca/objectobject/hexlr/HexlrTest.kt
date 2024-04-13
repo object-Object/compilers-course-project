@@ -518,6 +518,20 @@ class HexlrTest {
             """ to listOf(NumberIota(0)),
             """
                 {
+                    Numerical Reflection: 0
+                    \\
+                    Charon's Gambit
+                    Gemini Decomposition
+                    Hermes' Gambit
+                    Numerical Reflection: 1
+                }
+                Hermes' Gambit
+            """ to listOf(
+                OpHalt.toIota(),
+                NumberIota(0),
+            ),
+            """
+                {
                     Numerical Reflection: 2
                     Charon's Gambit                
                     Numerical Reflection: 3

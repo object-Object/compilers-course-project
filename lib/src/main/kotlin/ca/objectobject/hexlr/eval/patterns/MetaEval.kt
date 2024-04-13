@@ -1,7 +1,10 @@
 package ca.objectobject.hexlr.eval.patterns
 
 import ca.objectobject.hexlr.eval.*
-import ca.objectobject.hexlr.eval.iotas.*
+import ca.objectobject.hexlr.eval.iotas.EvaluableIota
+import ca.objectobject.hexlr.eval.iotas.Iota
+import ca.objectobject.hexlr.eval.iotas.ListIota
+import ca.objectobject.hexlr.eval.iotas.PatternIota
 
 data object OpEval : TypedPatternUnit() {
     override val eval: EvalUnit = ::evalUnit
@@ -17,23 +20,25 @@ data object OpEval : TypedPatternUnit() {
 data object OpFor : TypedPatternSingle() {
     override val eval: EvalSingle = ::eval
 
-    fun eval(runtime: Runtime, patterns: ListIota, data: ListIota): ListIota {
-        val initialStack = runtime.stack.toList()
+    fun eval(runtime: Runtime, patterns: ListIota, data: ListIota) = runtime.run {
+        val initialStack = stack.toList()
 
         val outputs = mutableListOf<Iota>()
         for (iota in data.values) {
-            runtime.stack.push(iota)
-            val keepIterating = runtime.execute(patterns.values)
-            outputs.addAll(runtime.stack)
-            runtime.stack.clear()
-            runtime.stack.addAll(initialStack)
-            if (!keepIterating) break
+            stack.push(iota)
+            execute(patterns.values)
+            outputs.addAll(stack)
+            stack.clear()
+            stack.addAll(initialStack)
+            if (shouldHalt) break
         }
 
-        return ListIota(outputs)
+        ListIota(outputs)
     }
 }
 
 data object OpHalt : Pattern {
-    override fun eval(runtime: Runtime) = throw NotImplementedError()
+    override fun eval(runtime: Runtime) {
+        runtime.shouldHalt = true
+    }
 }
