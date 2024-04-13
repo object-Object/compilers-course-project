@@ -33,12 +33,17 @@ data object OpFor : TypedPatternSingle() {
         val outputs = mutableListOf<Iota>()
         for (iota in data.values) {
             runtime.stack.push(iota)
-            runtime.execute(patterns.values)
+            val keepIterating = runtime.execute(patterns.values)
             outputs.addAll(runtime.stack)
             runtime.stack.clear()
             runtime.stack.addAll(initialStack)
+            if (!keepIterating) break
         }
 
         return ListIota(outputs)
     }
+}
+
+data object OpHalt : Pattern {
+    override fun eval(runtime: Runtime) = throw NotImplementedError()
 }

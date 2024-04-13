@@ -74,6 +74,7 @@ object PatternRegistry {
 
         "Hermes' Gambit" to OpEval,
         "Thoth's Gambit" to OpFor,
+        "Charon's Gambit" to OpHalt,
 
         "Reveal" to OpReveal,
     )

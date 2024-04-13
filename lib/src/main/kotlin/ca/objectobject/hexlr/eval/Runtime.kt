@@ -6,6 +6,7 @@ import ca.objectobject.hexlr.eval.iotas.ListIota
 import ca.objectobject.hexlr.eval.iotas.NullIota
 import ca.objectobject.hexlr.eval.iotas.PatternIota
 import ca.objectobject.hexlr.eval.patterns.OpEscape
+import ca.objectobject.hexlr.eval.patterns.OpHalt
 import ca.objectobject.hexlr.eval.patterns.OpLeftParen
 import ca.objectobject.hexlr.eval.patterns.OpRightParen
 import java.util.*
@@ -20,13 +21,18 @@ data class Runtime(
 
     val isEscaping get() = escapeNext || escapeLevel > 0
 
-    fun execute(iotas: List<Iota>) = iotas.forEach(::execute)
+    fun execute(iotas: List<Iota>): Boolean {
+        for (iota in iotas) {
+            if (!execute(iota)) return false
+        }
+        return true
+    }
 
-    fun execute(iota: Iota) {
+    fun execute(iota: Iota): Boolean {
         if (escapeNext) {
             pushEscaped(iota)
             escapeNext = false
-            return
+            return true
         }
 
         if (escapeLevel > 0 && iota != OpEscape.toIota()) {
@@ -41,13 +47,17 @@ data class Runtime(
                 stack.push(ListIota(newListContents.toList()))
                 newListContents.clear()
             }
-            return
+            return true
         }
 
-        if (iota is PatternIota) {
-            iota.value.eval(this)
-        } else {
-            throw TypeError(iota, PatternIota::class)
+        if (iota !is PatternIota) throw TypeError(iota, PatternIota::class)
+
+        return when (iota.value) {
+            OpHalt -> false
+            else -> {
+                iota.value.eval(this)
+                true
+            }
         }
     }
 

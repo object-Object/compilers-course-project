@@ -3,11 +3,11 @@
  */
 package ca.objectobject.hexlr
 
+import ca.objectobject.hexlr.eval.iotas.*
 import ca.objectobject.hexlr.eval.patterns.OpEscape
 import ca.objectobject.hexlr.eval.patterns.OpLeftParen
 import ca.objectobject.hexlr.eval.patterns.OpRightParen
 import ca.objectobject.hexlr.eval.patterns.OpTrue
-import ca.objectobject.hexlr.eval.iotas.*
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -495,6 +495,23 @@ class HexlrTest {
                 NumberIota(1),
                 NumberIota(0),
             ),
+            """
+                {
+                    Numerical Reflection: 0
+                    Charon's Gambit
+                    Numerical Reflection: 1
+                }
+                Hermes' Gambit
+            """ to listOf(NumberIota(0)),
+            """
+                {
+                    Numerical Reflection: 2
+                    Charon's Gambit                
+                    Numerical Reflection: 3
+                }
+                \<[0, 1]>
+                Thoth's Gambit
+            """ to listOf(ListIota(NumberIota(0), NumberIota(2))),
         ).map { Arguments.of(it.first, it.second) }
     }
 }
