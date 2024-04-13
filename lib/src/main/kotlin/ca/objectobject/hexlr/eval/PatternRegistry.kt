@@ -65,8 +65,12 @@ object PatternRegistry {
 
         "True Reflection" to OpTrue,
         "False Reflection" to OpFalse,
+        "Nullary Reflection" to OpNull,
 
         "Augur's Exaltation" to OpIf,
+
+        "Muninn's Reflection" to OpReadRavenmind,
+        "Huginn's Gambit" to OpWriteRavenmind,
 
         "Hermes' Gambit" to OpEval,
         "Thoth's Gambit" to OpFor,

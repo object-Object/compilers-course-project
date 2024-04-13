@@ -7,3 +7,7 @@ interface Iota {
 data class BooleanIota(val value: Boolean) : Iota {
     override fun toRevealString() = value.toString()
 }
+
+data object NullIota : Iota {
+    override fun toRevealString() = "NULL"
+}

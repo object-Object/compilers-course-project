@@ -1,16 +1,18 @@
 package ca.objectobject.hexlr.eval
 
 import ca.objectobject.hexlr.TypeError
+import ca.objectobject.hexlr.eval.iotas.Iota
+import ca.objectobject.hexlr.eval.iotas.ListIota
+import ca.objectobject.hexlr.eval.iotas.NullIota
+import ca.objectobject.hexlr.eval.iotas.PatternIota
 import ca.objectobject.hexlr.eval.patterns.OpEscape
 import ca.objectobject.hexlr.eval.patterns.OpLeftParen
 import ca.objectobject.hexlr.eval.patterns.OpRightParen
-import ca.objectobject.hexlr.eval.iotas.Iota
-import ca.objectobject.hexlr.eval.iotas.ListIota
-import ca.objectobject.hexlr.eval.iotas.PatternIota
-import java.util.Stack
+import java.util.*
 
 data class Runtime(
     val stack: Stack<Iota> = Stack(),
+    var ravenmind: Iota = NullIota
 ) {
     var escapeNext = false
     var escapeLevel = 0
