@@ -1,5 +1,6 @@
 
 import ca.objectobject.hexlr.eval.Runtime
+import ca.objectobject.hexlr.eval.iotas.NullIota
 import ca.objectobject.hexlr.execute
 import ca.objectobject.hexlr.parseIotas
 import com.github.ajalt.clikt.core.CliktCommand
@@ -51,8 +52,13 @@ class Hello : CliktCommand() {
     }
 
     private fun printStack(runtime: Runtime) {
+        println("Stack:")
         for (iota in runtime.stack.asReversed()) {
             println("| ${iota.toRevealString()}")
+        }
+
+        with (runtime.ravenmind) {
+            if (this != NullIota) println("Ravenmind:\n| ${toRevealString()}")
         }
     }
 }
