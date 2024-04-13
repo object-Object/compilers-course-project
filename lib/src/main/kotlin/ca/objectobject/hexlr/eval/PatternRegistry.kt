@@ -36,6 +36,17 @@ object PatternRegistry {
 
         "Vacant Reflection" to OpEmptyList,
         "Single's Purification" to OpSingletonList,
+        "Selection Distillation" to OpSelect,
+        "Selection Exaltation" to OpSlice,
+        "Integration Distillation" to OpAppend,
+        "Combination Distillation" to OpConcat,
+        "Abacus Purification" to OpListLen,
+        "Retrograde Purification" to OpReverse,
+        "Locator's Distillation" to OpIndexOf,
+        "Excisor's Distillation" to OpRemove,
+        "Surgeon's Exaltation" to OpInsert,
+        "Speaker's Distillation" to OpPushFirst,
+        "Speaker's Decomposition" to OpPopFirst,
 
         "Flock's Gambit" to OpSlurpList,
         "Flock's Disintegration" to OpSplatList,
