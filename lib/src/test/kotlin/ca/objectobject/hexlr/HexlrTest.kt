@@ -3,16 +3,15 @@
  */
 package ca.objectobject.hexlr
 
+import ca.objectobject.hexlr.eval.Runtime
 import ca.objectobject.hexlr.eval.iotas.*
-import ca.objectobject.hexlr.eval.patterns.OpEscape
-import ca.objectobject.hexlr.eval.patterns.OpLeftParen
-import ca.objectobject.hexlr.eval.patterns.OpRightParen
-import ca.objectobject.hexlr.eval.patterns.OpTrue
+import ca.objectobject.hexlr.eval.patterns.*
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
+import java.util.*
 import kotlin.test.assertEquals
 
 class HexlrTest {
@@ -21,6 +20,20 @@ class HexlrTest {
     fun programProducesExpectedStack(program: String, want: List<Iota>) {
         val runtime = execute(program.trimIndent())
         assertEquals(want.asReversed(), runtime.stack.toList())
+    }
+
+    @ParameterizedTest
+    @MethodSource("getData_swindleWorks")
+    fun swindleWorks(code: Int, want: List<Int>) {
+        val stack = Stack<Iota>().apply {
+            addAll(want.indices.map(::NumberIota))
+            push(NumberIota(code))
+        }
+
+        val runtime = Runtime(stack)
+        runtime.execute(OpSwindle.toIota())
+
+        assertEquals(want.map(::NumberIota), runtime.stack.toList())
     }
 
     @ParameterizedTest
@@ -512,6 +525,35 @@ class HexlrTest {
                 \<[0, 1]>
                 Thoth's Gambit
             """ to listOf(ListIota(NumberIota(0), NumberIota(2))),
+            """
+                \<0>
+                \<1>
+                \<2>
+                \<3>
+                \<4>
+                \<100> // edcba -> aebdc
+                Swindler's Gambit
+            """ to listOf(
+                NumberIota(2),
+                NumberIota(1),
+                NumberIota(3),
+                NumberIota(0),
+                NumberIota(4),
+            ),
+        ).map { Arguments.of(it.first, it.second) }
+
+        @JvmStatic
+        fun getData_swindleWorks() = listOf(
+            0 to listOf(0),
+            1 to listOf(1, 0),
+            2 to listOf(1, 0, 2),
+            3 to listOf(1, 2, 0),
+            4 to listOf(2, 0, 1),
+            5 to listOf(2, 1, 0),
+            6 to listOf(1, 0, 2, 3),
+            24 to listOf(1, 0, 2, 3, 4),
+            119 to listOf(4, 3, 2, 1, 0),
+            120 to listOf(1, 0, 2, 3, 4, 5),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

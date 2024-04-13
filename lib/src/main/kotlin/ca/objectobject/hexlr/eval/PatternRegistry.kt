@@ -62,6 +62,7 @@ object PatternRegistry {
         "Rotation Gambit II" to OpYankDown,
         "Fisherman's Gambit" to OpFisherman,
         "Fisherman's Gambit II" to OpFishermanCopy,
+        "Swindler's Gambit" to OpSwindle,
 
         "True Reflection" to OpTrue,
         "False Reflection" to OpFalse,
