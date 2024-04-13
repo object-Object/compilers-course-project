@@ -4,4 +4,4 @@ plugins {
 }
 
 rootProject.name = "compilers-course-project"
-include("lib")
+include("lib", "app")

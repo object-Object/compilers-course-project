@@ -16,6 +16,8 @@ data class Runtime(
     var escapeLevel = 0
     private val newListContents = mutableListOf<Iota>()
 
+    val isEscaping get() = escapeNext || escapeLevel > 0
+
     fun execute(iotas: List<Iota>) = iotas.forEach(::execute)
 
     fun execute(iota: Iota) {
@@ -56,6 +58,12 @@ data class Runtime(
      * Pops n values from the stack, returning the lowest iota first. Returns null if the stack has less than n iotas.
      */
     fun popOrNull(n: Int = 1) = if (stack.count() >= n) { pop(n) } else { null }
+
+    fun cancelEscape() {
+        escapeNext = false
+        escapeLevel = 0
+        newListContents.clear()
+    }
 
     private fun pushEscaped(iota: Iota) {
         if (escapeLevel > 0) {
