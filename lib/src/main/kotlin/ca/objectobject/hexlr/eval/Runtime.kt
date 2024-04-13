@@ -11,7 +11,7 @@ import ca.objectobject.hexlr.eval.patterns.OpLeftParen
 import ca.objectobject.hexlr.eval.patterns.OpRightParen
 import java.util.*
 
-data class Runtime(
+open class Runtime(
     val stack: Stack<Iota> = Stack(),
     var ravenmind: Iota = NullIota
 ) {
@@ -55,11 +55,21 @@ data class Runtime(
         return when (iota.value) {
             OpHalt -> false
             else -> {
-                iota.value.eval(this)
+                executePattern(iota.value)
                 true
             }
         }
     }
+
+    open fun executePattern(pattern: Pattern) {
+        beforeExecute(pattern)
+        pattern.eval(this)
+        afterExecute(pattern)
+    }
+
+    open fun beforeExecute(pattern: Pattern) {}
+
+    open fun afterExecute(pattern: Pattern) {}
 
     /**
      * Pops n values from the stack, returning the lowest iota first.
