@@ -1,10 +1,7 @@
 package ca.objectobject.hexlr.eval
 
 import ca.objectobject.hexlr.eval.patterns.*
-import ca.objectobject.hexlr.eval.patterns.arithmetic.OpAdd
-import ca.objectobject.hexlr.eval.patterns.arithmetic.OpDivide
-import ca.objectobject.hexlr.eval.patterns.arithmetic.OpMultiply
-import ca.objectobject.hexlr.eval.patterns.arithmetic.OpSubtract
+import ca.objectobject.hexlr.eval.patterns.arithmetic.*
 
 object PatternRegistry {
     private val PATTERNS: Map<String, Pattern> = mapOf(
@@ -16,6 +13,15 @@ object PatternRegistry {
         "Subtractive Distillation" to OpSubtract,
         "Multiplicative Distillation" to OpMultiply,
         "Division Distillation" to OpDivide,
+        "Modulus Distillation" to OpModulus,
+        "Power Distillation" to OpPower,
+
+        "Length Purification" to OpAbsLength,
+        "Floor Purification" to OpFloor,
+        "Ceiling Purification" to OpCeil,
+        "Axial Purification" to OpSignAxis,
+
+        "Entropy Reflection" to OpRandom,
 
         "Vector Exaltation" to OpSlurpVec,
         "Vector Disintegration" to OpSplatVec,
@@ -30,8 +36,21 @@ object PatternRegistry {
 
         "Vacant Reflection" to OpEmptyList,
         "Single's Purification" to OpSingletonList,
+
         "Flock's Gambit" to OpSlurpList,
         "Flock's Disintegration" to OpSplatList,
+        "Flock's Reflection" to OpStackLen,
+
+        "Gemini Decomposition" to OpCopy,
+        "Gemini Gambit" to OpCopyN,
+        "Prospector's Gambit" to OpCopyFromBelow,
+        "Undertaker's Gambit" to OpCopyToBelow,
+        "Dioscuri Gambit" to Op2Dup,
+        "Jester's Gambit" to OpSwap,
+        "Rotation Gambit" to OpYankUp,
+        "Rotation Gambit II" to OpYankDown,
+        "Fisherman's Gambit" to OpFisherman,
+        "Fisherman's Gambit II" to OpFishermanCopy,
 
         "True Reflection" to OpTrue,
         "False Reflection" to OpFalse,

@@ -6,11 +6,11 @@ import ca.objectobject.hexlr.eval.iotas.VectorIota
 data object OpDivide : ArithmeticPattern() {
     override fun operate(left: Double, right: Double) = NumberIota(left / right)
 
-    override fun operate(left: Double, right: VectorIota) = right.let { (x, y, z) ->
+    override fun operate(left: Double, right: VectorIota) = right.run {
         VectorIota(left / x, left / y, left / z)
     }
 
-    override fun operate(left: VectorIota, right: Double) = left.let { (x, y, z) ->
+    override fun operate(left: VectorIota, right: Double) = left.run {
         VectorIota(x / right, y / right, z / right)
     }
 

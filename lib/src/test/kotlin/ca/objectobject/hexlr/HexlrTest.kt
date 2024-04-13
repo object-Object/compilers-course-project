@@ -362,6 +362,139 @@ class HexlrTest {
                     ListIota(BooleanIota(true)),
                 ),
             ),
+            """
+                \<0>
+                \<1>
+                Jester's Gambit
+            """ to listOf(
+                NumberIota(0),
+                NumberIota(1),
+            ),
+            """
+                \<0>
+                \<1>
+                Dioscuri Gambit
+            """ to listOf(
+                NumberIota(1),
+                NumberIota(0),
+                NumberIota(1),
+                NumberIota(0),
+            ),
+            """
+                \<0>
+                \<1>
+                \<2>
+                \<3>
+                \<2>
+                Fisherman's Gambit
+            """ to listOf(
+                NumberIota(2),
+                NumberIota(3),
+                NumberIota(1),
+                NumberIota(0),
+            ),"""
+                \<0>
+                \<1>
+                \<2>
+                \<3>
+                \<4>
+                Fisherman's Gambit
+            """ to listOf(
+                NumberIota(0),
+                NumberIota(3),
+                NumberIota(2),
+                NumberIota(1),
+            ),
+            """
+                \<0>
+                \<1>
+                \<2>
+                \<3>
+                \<1>
+                Fisherman's Gambit II
+            """ to listOf(
+                NumberIota(2),
+                NumberIota(3),
+                NumberIota(2),
+                NumberIota(1),
+                NumberIota(0),
+            ),"""
+                \<0>
+                \<1>
+                \<2>
+                \<3>
+                \<3>
+                Fisherman's Gambit II
+            """ to listOf(
+                NumberIota(0),
+                NumberIota(3),
+                NumberIota(2),
+                NumberIota(1),
+                NumberIota(0),
+            ),
+            """
+                \<0>
+                \<3>
+                Gemini Gambit
+            """ to listOf(
+                NumberIota(0),
+                NumberIota(0),
+                NumberIota(0),
+            ),
+            """
+                \<0>
+                \<1>
+                \<2>
+                Prospector's Gambit
+            """ to listOf(
+                NumberIota(1),
+                NumberIota(2),
+                NumberIota(1),
+                NumberIota(0),
+            ),
+            """
+                \<0>
+                \<1>
+                \<2>
+                Undertaker's Gambit
+            """ to listOf(
+                NumberIota(2),
+                NumberIota(1),
+                NumberIota(2),
+                NumberIota(0),
+            ),
+            """
+                \<0>
+                \<1>
+                \<2>
+                Rotation Gambit
+            """ to listOf(
+                NumberIota(0),
+                NumberIota(2),
+                NumberIota(1),
+            ),
+            """
+                \<0>
+                \<1>
+                \<2>
+                Rotation Gambit II
+            """ to listOf(
+                NumberIota(1),
+                NumberIota(0),
+                NumberIota(2),
+            ),
+            "Flock's Reflection" to listOf(NumberIota(0)),
+            """
+                \<0>
+                \<1>
+                \<2>
+                Flock's Reflection
+            """ to listOf(
+                NumberIota(3),
+                NumberIota(2),
+                NumberIota(1),
+                NumberIota(0),
+            ),
         ).map { Arguments.of(it.first, it.second) }
     }
 }

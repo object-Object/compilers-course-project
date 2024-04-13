@@ -14,4 +14,15 @@ data class VectorIota(val x: Double, val y: Double, val z: Double) : ArithmeticI
     constructor(x: String, y: String, z: String) : this(x.toDouble(), y.toDouble(), z.toDouble())
 
     constructor(x: NumberIota, y: NumberIota, z: NumberIota) : this(x.value, y.value, z.value)
+
+    /**
+     * Dot product.
+     */
+    fun dot(other: VectorIota) = x * other.x + y * other.y + z * other.z
+
+    operator fun times(num: Double) = VectorIota(x * num, y * num, z * num)
 }
+
+fun Number.toIota() = NumberIota(this)
+
+operator fun Double.times(vec: VectorIota) = vec * this

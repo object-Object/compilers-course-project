@@ -6,7 +6,7 @@ import ca.objectobject.hexlr.eval.iotas.VectorIota
 data object OpAdd : ArithmeticPattern() {
     override fun operate(left: Double, right: Double) = NumberIota(left + right)
 
-    override fun operate(left: Double, right: VectorIota) = right.let { (x, y, z) ->
+    override fun operate(left: Double, right: VectorIota) = right.run {
         VectorIota(left + x, left + y, left + z)
     }
 
