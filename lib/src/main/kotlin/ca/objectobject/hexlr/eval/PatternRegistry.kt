@@ -68,6 +68,17 @@ object PatternRegistry {
         "Nullary Reflection" to OpNull,
 
         "Augur's Exaltation" to OpIf,
+        "Augur's Purification" to OpTruthy,
+        "Negation Purification" to OpNot,
+        "Disjunction Distillation" to OpOr,
+        "Conjunction Distillation" to OpAnd,
+        "Exclusion Distillation" to OpXor,
+        "Equality Distillation" to OpEqual,
+        "Inequality Distillation" to OpNotEqual,
+        "Maximus Distillation" to OpGreaterThan,
+        "Maximus Distillation II" to OpGreaterEqual,
+        "Minimus Distillation" to OpLessThan,
+        "Minimus Distillation II" to OpLessEqual,
 
         "Muninn's Reflection" to OpReadRavenmind,
         "Huginn's Gambit" to OpWriteRavenmind,

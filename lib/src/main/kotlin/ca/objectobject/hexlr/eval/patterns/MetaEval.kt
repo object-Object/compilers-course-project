@@ -3,16 +3,6 @@ package ca.objectobject.hexlr.eval.patterns
 import ca.objectobject.hexlr.eval.*
 import ca.objectobject.hexlr.eval.iotas.*
 
-data object OpIf : TypedPatternSingle() {
-    override val eval: EvalSingle = ::eval
-
-    fun eval(condition: BooleanIota, valueIf: Iota, valueElse: Iota) = if (condition.value) {
-        valueIf
-    } else {
-        valueElse
-    }
-}
-
 data object OpEval : TypedPatternUnit() {
     override val eval: EvalUnit = ::evalUnit
 
