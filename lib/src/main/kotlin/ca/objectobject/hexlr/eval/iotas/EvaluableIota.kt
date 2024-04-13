@@ -7,8 +7,12 @@ import ca.objectobject.hexlr.eval.Pattern
  */
 sealed interface EvaluableIota : Iota
 
-data class PatternIota(val value: Pattern) : EvaluableIota
+data class PatternIota(val value: Pattern) : EvaluableIota {
+    override fun toRevealString() = value.name
+}
 
 data class ListIota(val values: List<Iota> = listOf()) : EvaluableIota {
     constructor(vararg values: Iota) : this(values.toList())
+
+    override fun toRevealString() = "[" + values.joinToString { it.toRevealString() } + "]"
 }

@@ -59,6 +59,8 @@ object PatternRegistry {
 
         "Hermes' Gambit" to OpEval,
         "Thoth's Gambit" to OpFor,
+
+        "Reveal" to OpReveal,
     )
 
     private val PATTERNS_WITH_ARG: Map<String, Map<String, Pattern>> = mapOf(

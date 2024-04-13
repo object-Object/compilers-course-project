@@ -1,9 +1,12 @@
+
 import ca.objectobject.hexlr.eval.Runtime
 import ca.objectobject.hexlr.execute
 import ca.objectobject.hexlr.parseIotas
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.arguments.*
-import com.github.ajalt.clikt.parameters.types.*
+import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.help
+import com.github.ajalt.clikt.parameters.arguments.optional
+import com.github.ajalt.clikt.parameters.types.file
 import org.antlr.v4.runtime.CharStreams
 
 class Hello : CliktCommand() {
@@ -49,7 +52,7 @@ class Hello : CliktCommand() {
 
     private fun printStack(runtime: Runtime) {
         for (iota in runtime.stack.asReversed()) {
-            println("| $iota")
+            println("| ${iota.toRevealString()}")
         }
     }
 }
