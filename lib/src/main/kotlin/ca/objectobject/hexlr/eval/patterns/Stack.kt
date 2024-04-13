@@ -1,13 +1,8 @@
 package ca.objectobject.hexlr.eval.patterns
 
-import ca.objectobject.hexlr.eval.EvalFn
-import ca.objectobject.hexlr.eval.Pattern
-import ca.objectobject.hexlr.eval.Runtime
-import ca.objectobject.hexlr.eval.TypedPattern
+import ca.objectobject.hexlr.eval.*
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.eval.iotas.NumberIota
-import ca.objectobject.hexlr.eval.iotas.toSingle
-import ca.objectobject.hexlr.util.Single
 
 data class OpMask(val mask: List<Boolean>) : Pattern {
     constructor(mask: String) : this(mask.map { it == '-' })
@@ -20,61 +15,61 @@ data class OpMask(val mask: List<Boolean>) : Pattern {
     }
 }
 
-data object OpCopy : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpCopy : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(iota: Iota) = listOf(iota, iota)
 }
 
-data object OpCopyFromBelow : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpCopyFromBelow : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(a: Iota, b: Iota) = listOf(a, b, a)
 }
 
-data object OpCopyToBelow : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpCopyToBelow : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(a: Iota, b: Iota) = listOf(b, a, b)
 }
 
-data object OpCopyN : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpCopyN : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(iota: Iota, n: NumberIota) = List(n.value.toInt()){ iota }
 }
 
-data object Op2Dup : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object Op2Dup : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(a: Iota, b: Iota) = listOf(a, b, a, b)
 }
 
-data object OpSwap : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpSwap : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(a: Iota, b: Iota) = listOf(b, a)
 }
 
-data object OpYankUp : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpYankUp : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(a: Iota, b: Iota, c: Iota) = listOf(b, c, a)
 }
 
-data object OpYankDown : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpYankDown : TypedPatternMulti() {
+    override val eval: EvalMulti = ::eval
     fun eval(a: Iota, b: Iota, c: Iota) = listOf(c, a, b)
 }
 
-data object OpFisherman : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpFisherman : TypedPatternSingle() {
+    override val eval: EvalSingle = ::eval
 
-    fun eval(runtime: Runtime, n: NumberIota): Single<Iota> {
+    fun eval(runtime: Runtime, n: NumberIota): Iota {
         val index = n.value.toInt() - 1
-        return runtime.stack.run { removeAt(lastIndex - index) }.toSingle()
+        return runtime.stack.run { removeAt(lastIndex - index) }
     }
 }
 
-data object OpFishermanCopy : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpFishermanCopy : TypedPatternSingle() {
+    override val eval: EvalSingle = ::eval
 
-    fun eval(runtime: Runtime, n: NumberIota): Single<Iota> {
+    fun eval(runtime: Runtime, n: NumberIota): Iota {
         val index = n.value.toInt() // bug-for-bug parity :(
-        return runtime.stack.run { get(lastIndex - index) }.toSingle()
+        return runtime.stack.run { get(lastIndex - index) }
     }
 }
 

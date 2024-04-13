@@ -1,14 +1,13 @@
 package ca.objectobject.hexlr.eval.patterns.arithmetic
 
-import ca.objectobject.hexlr.eval.EvalFn
-import ca.objectobject.hexlr.eval.TypedPattern
+import ca.objectobject.hexlr.eval.EvalSingle
+import ca.objectobject.hexlr.eval.TypedPatternSingle
 import ca.objectobject.hexlr.eval.iotas.ArithmeticIota
 import ca.objectobject.hexlr.eval.iotas.NumberIota
 import ca.objectobject.hexlr.eval.iotas.VectorIota
-import ca.objectobject.hexlr.eval.iotas.toSingle
 
-abstract class ArithmeticPattern : TypedPattern() {
-    override val eval: EvalFn = ::eval
+abstract class ArithmeticPattern : TypedPatternSingle() {
+    override val eval: EvalSingle = ::eval
 
     fun eval(left: ArithmeticIota, right: ArithmeticIota) = when (left) {
         is NumberIota -> when (right) {
@@ -19,7 +18,7 @@ abstract class ArithmeticPattern : TypedPattern() {
             is NumberIota -> operate(left, right.value)
             is VectorIota -> operate(left, right)
         }
-    }.toSingle()
+    }
 
     open fun operate(left: Double, right: Double): ArithmeticIota = throw IllegalArgumentException()
     open fun operate(left: Double, right: VectorIota): ArithmeticIota = throw IllegalArgumentException()

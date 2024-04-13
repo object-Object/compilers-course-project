@@ -1,17 +1,20 @@
 package ca.objectobject.hexlr.eval.patterns.arithmetic
 
-import ca.objectobject.hexlr.eval.EvalFn
-import ca.objectobject.hexlr.eval.TypedPattern
-import ca.objectobject.hexlr.eval.iotas.*
+import ca.objectobject.hexlr.eval.EvalSingle
+import ca.objectobject.hexlr.eval.TypedPatternSingle
+import ca.objectobject.hexlr.eval.iotas.ArithmeticIota
+import ca.objectobject.hexlr.eval.iotas.NumberIota
+import ca.objectobject.hexlr.eval.iotas.VectorIota
+import ca.objectobject.hexlr.eval.iotas.toIota
 import kotlin.math.*
 
-abstract class UnaryArithmeticPattern : TypedPattern() {
-    override val eval: EvalFn = ::eval
+abstract class UnaryArithmeticPattern : TypedPatternSingle() {
+    override val eval: EvalSingle = ::eval
 
     fun eval(iota: ArithmeticIota) = when (iota) {
             is NumberIota -> operate(iota.value)
             is VectorIota -> operate(iota)
-    }.toSingle()
+    }
 
     open fun operate(num: Double): ArithmeticIota = throw IllegalArgumentException()
     open fun operate(vec: VectorIota): ArithmeticIota = throw IllegalArgumentException()

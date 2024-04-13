@@ -1,14 +1,13 @@
 package ca.objectobject.hexlr.eval.patterns
 
-import ca.objectobject.hexlr.eval.EvalFn
-import ca.objectobject.hexlr.eval.TypedPattern
+import ca.objectobject.hexlr.eval.EvalUnit
+import ca.objectobject.hexlr.eval.TypedPatternUnit
 import ca.objectobject.hexlr.eval.iotas.Iota
 
-data object OpReveal : TypedPattern() {
-    override val eval: EvalFn = ::eval
+data object OpReveal : TypedPatternUnit() {
+    override val eval: EvalUnit = ::evalUnit
 
-    fun eval(value: Iota): List<Iota>? {
+    fun evalUnit(value: Iota) {
         println(value.toRevealString())
-        return null
     }
 }
