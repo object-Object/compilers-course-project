@@ -35,7 +35,7 @@ class Hello : CliktCommand() {
                     override fun beforeExecute(pattern: Pattern) {
                         writer.write("""
                             -------------------
-                            Next: $pattern
+                            Next: ${pattern.name}
                         """.trimIndent() + "\n" + printStack(this))
                         writer.flush()
                     }

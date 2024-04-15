@@ -7,6 +7,12 @@ import ca.objectobject.hexlr.eval.iotas.NumberIota
 data class OpMask(val mask: List<Boolean>) : Pattern {
     constructor(mask: String) : this(mask.map { it == '-' })
 
+    override val name get() = "${super.name}(${strMask})"
+
+    private val strMask get() = mask.joinToString("") {
+        if (it) { "-" } else { "v" }
+    }
+
     override fun eval(runtime: Runtime) {
         val iotas = pop(runtime, mask.count())
         for ((iota, keep) in iotas.zip(mask)) {

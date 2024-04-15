@@ -21,4 +21,6 @@ data object OpNull : ConstPattern(NullIota)
 
 data class OpNumber(val number: Number) : ConstPattern(NumberIota(number)) {
     constructor(number: String) : this(number.toDouble())
+
+    override val name get() = "${super.name}(${number})"
 }
