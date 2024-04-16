@@ -2,6 +2,7 @@ package ca.objectobject.hexlr.eval
 
 import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.eval.iotas.PatternIota
+import org.antlr.v4.runtime.ParserRuleContext
 
 interface Pattern {
     val name get() = this::class.simpleName ?: this.toString()
@@ -18,4 +19,6 @@ interface Pattern {
     }
 
     fun toIota() = PatternIota(this)
+
+    fun toIota(ctx: ParserRuleContext) = PatternIota(this)
 }

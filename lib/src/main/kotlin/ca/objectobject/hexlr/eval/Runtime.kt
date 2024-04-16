@@ -82,6 +82,10 @@ open class Runtime(
         newListContents.clear()
     }
 
+    open fun println(value: Any) {
+        kotlin.io.println(value)
+    }
+
     private fun pushEscaped(iota: Iota) {
         if (escapeLevel > 0) {
             newListContents.add(iota)

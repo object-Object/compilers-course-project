@@ -1,7 +1,6 @@
 package ca.objectobject.hexlr
 
 import ca.objectobject.hexlr.eval.Runtime
-import ca.objectobject.hexlr.eval.iotas.Iota
 import ca.objectobject.hexlr.parser.*
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
@@ -18,7 +17,7 @@ fun parseTree(input: CharStream): ParseTree {
 
 fun parseIotas(source: String) = parseIotas(CharStreams.fromString(source))
 
-fun parseIotas(input: CharStream): List<Iota> {
+fun parseIotas(input: CharStream): List<ParsedIota> {
     val tree = parseTree(input)
     return HexlrVisitor().visit(tree)
 }
@@ -26,6 +25,6 @@ fun parseIotas(input: CharStream): List<Iota> {
 fun execute(source: String) = execute(CharStreams.fromString(source))
 
 fun execute(input: CharStream): Runtime {
-    val iotas = parseIotas(input)
+    val iotas = parseIotas(input).map { it.iota }
     return Runtime().apply { execute(iotas) }
 }

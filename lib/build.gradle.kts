@@ -12,6 +12,9 @@ dependencies {
     antlr(libs.antlr)
     implementation(kotlin("reflect"))
 
+    implementation(libs.lsp4j)
+    implementation(libs.lsp4j.debug)
+
     testImplementation(libs.kotlin.test)
     testImplementation(libs.junit.engine)
     testImplementation(libs.junit.params)
