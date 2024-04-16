@@ -10,17 +10,21 @@ import org.eclipse.lsp4j.debug.*
 import kotlin.io.path.Path
 import kotlin.io.path.name
 
+private const val MIN_ALLOCATED_VARIABLES_REF = 128
+
 class HexlrDebugger(
     private val initArgs: InitializeRequestArguments,
     private val launchArgs: LaunchArgs,
-    private val writeStdout: (String) -> Unit,
+    private val runtime: DebugRuntime,
 ) {
-    private val runtime = DebugRuntime(writeStdout)
-
     private val programSource: Source = Source().apply {
         name = Path(launchArgs.program).name
         path = launchArgs.program
     }
+
+    private val allocatedVariables = mutableListOf<Sequence<Variable>>()
+
+    private val breakpointLocations = mutableSetOf<Pair<Int, Int?>>()
 
     private val parsedIotas: MutableList<ParsedIota>
 
@@ -32,44 +36,103 @@ class HexlrDebugger(
     }
 
     // TODO: support multiple frames
-    fun getScopes(frameId: Int): Array<Scope> = arrayOf(
-        Scope().apply {
-            name = "Stack"
-            variablesReference = 1
-        },
-        Scope().apply {
-            name = "Ravenmind"
-            variablesReference = 2
-        },
-    )
+    fun getScopes(frameId: Int): List<Scope> {
+        val scopes = mutableListOf(
+            Scope().apply {
+                name = "Stack"
+                variablesReference = 1
+            },
+            Scope().apply {
+                name = "Ravenmind"
+                variablesReference = 2
+            },
+        )
+        if (runtime.escapeLevel > 0) {
+            scopes += Scope().apply {
+                name = "Intro/Retro"
+                variablesReference = 3
+            }
+        }
+        return scopes
+    }
 
     fun getVariables(variablesReference: Int): Sequence<Variable> = when (variablesReference) {
         // stack
-        1 -> runtime.stack.asReversed().asSequence().mapIndexed { i, it -> it.toVariable("$i") }
+        1 -> toVariables(runtime.stack.asReversed())
         // ravenmind
-        2 -> sequenceOf(runtime.ravenmind.toVariable("Ravenmind"))
-        else -> sequenceOf()
+        2 -> sequenceOf(toVariable("Ravenmind", runtime.ravenmind))
+        // intro/retro
+        3 -> toVariables(runtime.newListContentsView)
+        else -> getAllocatedVariables(variablesReference)
     }
 
-    fun getStackFrames(): Sequence<StackFrame> = sequenceOf(
-        StackFrame().apply {
-            id = 1
-            name = "main"
-            source = programSource
-            val (l, c) = getLineAndColumn(nextIota?.ctx)
-            line = l
-            column = c
+    private fun toVariables(iotas: Iterable<Iota>) = toVariables(iotas.asSequence())
+
+    private fun toVariables(iotas: Sequence<Iota>) = iotas.mapIndexed(::toVariable)
+
+    private fun toVariable(index: Number, iota: Iota) = toVariable("$index", iota)
+
+    private fun toVariable(name: String, iota: Iota): Variable = Variable().apply {
+        this.name = name
+        type = iota::class.simpleName
+        value = when (iota) {
+            is ListIota -> {
+                variablesReference = allocateVariables(toVariables(iota.values))
+                indexedVariables = iota.values.count()
+                "(${iota.values.count()}) [${iota.values.joinToString { it.toRevealString() }}]"
+            }
+
+            else -> iota.toRevealString()
         }
-    )
+    }
+
+    private fun allocateVariables(values: Sequence<Variable>): Int {
+        allocatedVariables.add(values)
+        return allocatedVariables.lastIndex + MIN_ALLOCATED_VARIABLES_REF
+    }
+
+    private fun getAllocatedVariables(variablesReference: Int): Sequence<Variable> {
+        return allocatedVariables.getOrElse(variablesReference - MIN_ALLOCATED_VARIABLES_REF) { sequenceOf() }
+    }
+
+    fun getStackFrames(): Sequence<StackFrame> = sequenceOf(StackFrame().apply {
+        id = 1
+        name = "main"
+        source = programSource
+        val (l, c) = getLineAndColumn(nextIota?.ctx)
+        line = l
+        column = c
+    })
+
+    fun setBreakpoints(sourceBreakpoints: Array<SourceBreakpoint>) = sourceBreakpoints.map {
+        Breakpoint().apply {
+            isVerified = true
+            source = programSource
+            line = it.line
+            column = it.column
+        }
+    }.apply {
+        breakpointLocations.clear()
+        breakpointLocations.addAll(map { Pair(it.line, it.column) })
+    }
 
     fun next(): Boolean {
+        allocatedVariables.clear()
         val parsedIota = parsedIotas.removeLastOrNull() ?: return false
         runtime.execute(parsedIota.iota)
         return parsedIotas.isNotEmpty()
     }
 
-    fun `continue`() {
-        while (next()) {}
+    fun `continue`(): Boolean {
+        while (parsedIotas.isNotEmpty()) {
+            val nextPos = getLineAndColumn(parsedIotas.last().ctx)
+            if (
+                breakpointLocations.contains(nextPos)
+                || breakpointLocations.contains(nextPos.first to null)
+            ) return true
+            next()
+        }
+        return false
     }
 
     private fun getLineAndColumn(ctx: ParserRuleContext?): Pair<Int, Int> {
@@ -82,18 +145,5 @@ class HexlrDebugger(
         if (initArgs.columnsStartAt1) column += 1
 
         return Pair(line, column)
-    }
-}
-
-fun <T : Iota> T.toVariable(name: String): Variable = Variable().also {
-    it.name = name
-    it.type = this::class.simpleName
-    when (this) {
-        is ListIota -> {
-            it.value = "[...]"
-            // TODO: variable reference
-        }
-
-        else -> it.value = toRevealString()
     }
 }

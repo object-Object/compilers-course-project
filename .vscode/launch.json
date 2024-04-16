@@ -8,7 +8,8 @@
             "type": "hexlr",
             "request": "launch",
             "name": "Debug file",
-            "program": "${file}"
+            "program": "${file}",
+            "stopOnEntry": true,
         }
     ]
 }

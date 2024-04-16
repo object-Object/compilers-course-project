@@ -5,8 +5,6 @@ import org.eclipse.lsp4j.debug.launch.DSPLauncher
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient
 import org.eclipse.lsp4j.debug.services.IDebugProtocolServer
 import org.eclipse.lsp4j.jsonrpc.Launcher
-import java.io.InputStream
-import java.io.OutputStream
 import java.net.ServerSocket
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
@@ -14,12 +12,14 @@ import java.util.concurrent.Future
 import kotlin.system.exitProcess
 
 fun main() {
-    HexlrDebugServer.launch()
+    val serverSocket = ServerSocket(4444)
+    while (true) {
+        HexlrDebugServer(serverSocket).acceptClient()
+    }
 }
 
-class HexlrDebugServer(input: InputStream, output: OutputStream) : IDebugProtocolServer {
-    private var launcher: Launcher<IDebugProtocolClient> = DSPLauncher.createServerLauncher(this, input, output)
-
+class HexlrDebugServer(private val serverSocket: ServerSocket) : IDebugProtocolServer {
+    private lateinit var launcher: Launcher<IDebugProtocolClient>
     private lateinit var listenerFuture: Future<Void>
     private lateinit var initArgs: InitializeRequestArguments
     private lateinit var launchArgs: LaunchArgs
@@ -27,52 +27,95 @@ class HexlrDebugServer(input: InputStream, output: OutputStream) : IDebugProtoco
 
     private val remoteProxy: IDebugProtocolClient get() = launcher.remoteProxy
 
+    fun acceptClient() {
+        println("Listening on port ${serverSocket.localPort}...")
+        val clientSocket = serverSocket.accept()
+        println("Client connected!")
+
+        val input = clientSocket.getInputStream()
+        val output = clientSocket.getOutputStream()
+
+        launcher = DSPLauncher.createServerLauncher(this, input, output)
+        try {
+            listenerFuture = launcher.startListening()
+            listenerFuture.get()
+        } catch (_: CancellationException) {}
+    }
+
     // lifecycle requests
 
     override fun initialize(args: InitializeRequestArguments): CompletableFuture<Capabilities> {
         printRequest("initialize", args)
         initArgs = args
-        return Capabilities().toFuture()
+        return Capabilities().apply {
+            supportsConfigurationDoneRequest = true
+        }.toFuture()
     }
 
     override fun launch(args: Map<String, Any>): CompletableFuture<Void> {
         printRequest("launch", args)
 
         launchArgs = LaunchArgs(args)
-        debugger = HexlrDebugger(initArgs, launchArgs, ::writeStdout)
+        val runtime = DebugRuntime(::writeStdout)
+        debugger = HexlrDebugger(initArgs, launchArgs, runtime)
 
         remoteProxy.initialized()
+        return futureOf()
+    }
 
-        remoteProxy.stopped(StoppedEventArguments().apply {
-            threadId = 0
-            reason = "entry"
-        })
+    override fun setBreakpoints(args: SetBreakpointsArguments): CompletableFuture<SetBreakpointsResponse> {
+        printRequest("setBreakpoints", args)
+        return SetBreakpointsResponse().apply {
+            breakpoints = debugger.setBreakpoints(args.breakpoints).toTypedArray()
+        }.toFuture()
+    }
 
+    override fun setExceptionBreakpoints(args: SetExceptionBreakpointsArguments): CompletableFuture<SetExceptionBreakpointsResponse> {
+        printRequest("setExceptionBreakpoints", args)
+
+        // tell the client we didn't enable any of their breakpoints
+        val count = args.filters.size + (args.filterOptions?.size ?: 0) + (args.exceptionOptions?.size ?: 0)
+        val breakpoints = Array(count) { Breakpoint().apply { isVerified = false } }
+
+        return SetExceptionBreakpointsResponse().apply {
+            this.breakpoints = breakpoints
+        }.toFuture()
+    }
+
+    override fun configurationDone(args: ConfigurationDoneArguments?): CompletableFuture<Void> {
+        if (launchArgs.stopOnEntry) {
+            remoteProxy.stopped(StoppedEventArguments().apply {
+                threadId = 0
+                reason = "entry"
+            })
+        } else {
+            handleDebuggerStep(debugger.`continue`(), "breakpoint")
+        }
         return futureOf()
     }
 
     override fun next(args: NextArguments): CompletableFuture<Void> {
         printRequest("next", args)
-
-        if (debugger.next()) {
-            remoteProxy.stopped(StoppedEventArguments().apply {
-                threadId = 0
-                reason = "step"
-            })
-        } else {
-            remoteProxy.exited(ExitedEventArguments().apply { exitCode = 0 })
-            remoteProxy.terminated(TerminatedEventArguments())
-        }
-
+        handleDebuggerStep(debugger.next(), "step")
         return futureOf()
     }
 
     override fun continue_(args: ContinueArguments): CompletableFuture<ContinueResponse> {
         printRequest("continue", args)
-        debugger.`continue`()
-        remoteProxy.exited(ExitedEventArguments().apply { exitCode = 0 })
-        remoteProxy.terminated(TerminatedEventArguments())
+        handleDebuggerStep(debugger.`continue`(), "breakpoint")
         return futureOf()
+    }
+
+    private fun handleDebuggerStep(continueDebugging: Boolean, reason: String) {
+        if (continueDebugging) {
+            remoteProxy.stopped(StoppedEventArguments().apply {
+                threadId = 0
+                this.reason = reason
+            })
+        } else {
+            remoteProxy.exited(ExitedEventArguments().apply { exitCode = 0 })
+            remoteProxy.terminated(TerminatedEventArguments())
+        }
     }
 
     override fun pause(args: PauseArguments): CompletableFuture<Void> {
@@ -82,6 +125,9 @@ class HexlrDebugServer(input: InputStream, output: OutputStream) : IDebugProtoco
 
     override fun disconnect(args: DisconnectArguments): CompletableFuture<Void> {
         printRequest("disconnect", args)
+        if (!args.restart) {
+            exitProcess(0)
+        }
         listenerFuture.cancel(true)
         return futureOf()
     }
@@ -101,7 +147,7 @@ class HexlrDebugServer(input: InputStream, output: OutputStream) : IDebugProtoco
     override fun scopes(args: ScopesArguments): CompletableFuture<ScopesResponse> {
         printRequest("scopes", args)
         return ScopesResponse().apply {
-            scopes = debugger.getScopes(args.frameId)
+            scopes = debugger.getScopes(args.frameId).toTypedArray()
         }.toFuture()
     }
 
@@ -119,32 +165,7 @@ class HexlrDebugServer(input: InputStream, output: OutputStream) : IDebugProtoco
         }.toFuture()
     }
 
-    // breakpoint requests
-
-    override fun setBreakpoints(args: SetBreakpointsArguments): CompletableFuture<SetBreakpointsResponse> {
-        printRequest("setBreakpoints", args)
-        // TODO: implement
-        return futureOf()
-    }
-
-    override fun setExceptionBreakpoints(args: SetExceptionBreakpointsArguments): CompletableFuture<SetExceptionBreakpointsResponse> {
-        printRequest("setExceptionBreakpoints", args)
-
-        // tell the client we didn't enable any of their breakpoints
-        val count = args.filters.size + (args.filterOptions?.size ?: 0) + (args.exceptionOptions?.size ?: 0)
-        val breakpoints = Array(count) { Breakpoint().apply { isVerified = false } }
-
-        return SetExceptionBreakpointsResponse().apply {
-            this.breakpoints = breakpoints
-        }.toFuture()
-    }
-
     // helpers
-
-    fun startListening(): Future<Void> {
-        listenerFuture = launcher.startListening()
-        return listenerFuture
-    }
 
     private fun writeStdout(value: String) {
         remoteProxy.output(OutputEventArguments().apply {
@@ -160,28 +181,6 @@ class HexlrDebugServer(input: InputStream, output: OutputStream) : IDebugProtoco
             println(args)
         }
         println("-".repeat(header.length))
-    }
-
-    // static methods
-
-    companion object {
-        fun launch(port: Int = 4444) {
-            val serverSocket = ServerSocket(4444)
-
-            println("Listening on port $port...")
-            val clientSocket = serverSocket.accept()
-            println("Client connected!")
-
-            val input = clientSocket.getInputStream()
-            val output = clientSocket.getOutputStream()
-
-            val server = HexlrDebugServer(input, output)
-            try {
-                server.startListening().get()
-            } catch (e: CancellationException) {
-                exitProcess(0)
-            }
-        }
     }
 }
 

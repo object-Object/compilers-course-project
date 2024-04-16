@@ -17,7 +17,7 @@ open class Runtime(
     var escapeNext = false
     var escapeLevel = 0
     var shouldHalt = false
-    private val newListContents = mutableListOf<Iota>()
+    protected val newListContents = mutableListOf<Iota>()
 
     val isEscaping get() = escapeNext || escapeLevel > 0
 
