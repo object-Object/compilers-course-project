@@ -11,13 +11,6 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Future
 import kotlin.system.exitProcess
 
-fun main() {
-    val serverSocket = ServerSocket(4444)
-    while (true) {
-        HexlrDebugServer(serverSocket).acceptClient()
-    }
-}
-
 class HexlrDebugServer(private val serverSocket: ServerSocket) : IDebugProtocolServer {
     private lateinit var launcher: Launcher<IDebugProtocolClient>
     private lateinit var listenerFuture: Future<Void>

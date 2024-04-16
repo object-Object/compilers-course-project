@@ -28,7 +28,7 @@ class Hello : CliktCommand() {
         val input = file?.run { reader() }?.let(CharStreams::fromReader)
         if (input != null) {
             // run file
-            val iotas = parseIotas(input)
+            val iotas = parseIotas(input).map { it.iota }
             val runtime = if (debug) {
                 val writer = File("debug.log").writer()
                 object : Runtime() {
@@ -62,7 +62,7 @@ class Hello : CliktCommand() {
                 }
 
                 try {
-                    val iotas = parseIotas(line)
+                    val iotas = parseIotas(line).map { it.iota }
                     runtime.execute(iotas)
                     if (!runtime.isEscaping) print(printStack(runtime))
                 } catch (e: Throwable) {

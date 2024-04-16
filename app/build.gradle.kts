@@ -28,3 +28,8 @@ tasks {
         workingDir = rootProject.projectDir
     }
 }
+
+task<JavaExec>("runDebugServer") {
+    mainClass = "DebugServerKt"
+    classpath = sourceSets.main.get().runtimeClasspath
+}
